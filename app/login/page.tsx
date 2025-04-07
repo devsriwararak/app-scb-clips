@@ -1,20 +1,9 @@
-'use client'
 import React from 'react'
-
-import { Card, Typography, Input, Checkbox, Button } from "@/app/components/safe-material";
+import LoginPage from '../views/login/LoginPage'
 
 const PageLogin = () => {
   return (
-    <div>
-<Button
-  variant="gradient"
-  color="blue"
-  onClick={() => alert("Button Clicked!")}
->
-  Click Me
-</Button>
-
-    </div>
+    <LoginPage />
   )
 }
 

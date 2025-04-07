@@ -1,10 +1,8 @@
 'use client'
 
 import "./globals.css";
-import { ThemeProvider } from "@material-tailwind/react";
-
-
-
+import Providers from "./Providers";
+import { SessionProvider } from "next-auth/react"
 
 export default function RootLayout({
   children,
@@ -16,9 +14,13 @@ export default function RootLayout({
       <body
         className={` antialiased`}
       >
-        <ThemeProvider>
+        <SessionProvider>
+        <Providers>
         {children}
-        </ThemeProvider>
+        </Providers>
+          
+        </SessionProvider>
+  
       </body>
     </html>
   );
