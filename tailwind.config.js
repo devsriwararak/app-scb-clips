@@ -7,7 +7,19 @@ module.exports = {
     "./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        background: 'var(--background)',
+        backgroundBody: 'var(--backgroundBody)',
+        foreground: 'var(--foreground)',
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        textmain: 'var(--text-main)',
+        textBody: 'var(--text-body)',
+        textBody2: 'var(--text-body-2)',
+      }
+    },
   },
   plugins: [],
+  darkMode: "class"
 }
