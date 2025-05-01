@@ -5,7 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import api from '@/app/lib/axiosInstance';
-import { Button } from '@/app/components/safe-material';
+import { Button, Card, CardBody, Typography } from '@/app/components/safe-material';
 
 const PageDashboard = () => {
 
@@ -13,26 +13,26 @@ const PageDashboard = () => {
   const router = useRouter();
 
   // States
-  const [data, setData]= useState([])
+  const [data, setData] = useState([])
 
-  const fetchData = async()=>{
+  const fetchData = async () => {
     try {
       const res = await api.get(`/api/users`)
       console.log(res.data);
-      
+
     } catch (error) {
       console.log(error);
-      
+
     }
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     fetchData()
-  },[])
+  }, [])
 
-  const handleLogout = async()=>{
+  const handleLogout = async () => {
     try {
-      await api.post(`/api/auth/logout`) 
+      await api.post(`/api/auth/logout`)
       await signOut({ callbackUrl: "/login" });
 
     } catch (error) {
@@ -51,15 +51,32 @@ const PageDashboard = () => {
 
   return (
     <div className="min-h-screen flex flex-col  p-4">
-    <h1 className="text-3xl font-bold mb-4 text-textmain">Admin Dashboard</h1>
-    <p className="text-lg text-textBody ">Welcome test 12345463454, {session?.user?.username}</p>
-    <p className="text-gray-500 mt-2">Role: {session?.user?.role}</p>
+      <h1 className="text-3xl font-bold mb-4 text-textmain">Admin Dashboard</h1>
+      <p className="text-lg text-textBody ">Welcome test 12345463454, {session?.user?.username}</p>
+      <p className="text-gray-500 mt-2">Role: {session?.user?.role}</p>
 
-<p className='text-textBody2'>    Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur velit reiciendis vero, excepturi repellat nulla numquam officia perferendis ut a omnis vel enim eligendi odio. Ut magnam consequuntur quam obcaecati.
-</p>
-    <Button value={"xxx"} color="amber" variant="filled" onClick={handleLogout}>xxx</Button>
+      <Button value={"xxx"} color="amber" variant="filled" onClick={handleLogout}>xxx</Button>
 
-  </div>
+
+      <div className='flex flex-row gap-4'>
+
+        <Card className='mt-4 w-full'>
+          <CardBody>
+            <Typography variant="h1">testtt</Typography>
+            <Typography variant="body1">test</Typography>
+          </CardBody>
+        </Card>
+
+        <Card className='mt-4 w-full'>
+          <CardBody>
+            <Typography variant="h1">testtt</Typography>
+            <Typography variant="body1">test</Typography>
+          </CardBody>
+        </Card>
+
+      </div>
+
+    </div>
   )
 }
 
