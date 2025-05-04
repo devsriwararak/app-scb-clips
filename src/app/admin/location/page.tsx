@@ -7,7 +7,9 @@ import ComponentCard from '@/components/common/ComponentCard'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import Input from '@/components/form/input/InputField'
 import Companyadd from '@/components/modals/Companyadd'
+import LocationAdd from '@/components/modals/LocationAdd'
 import CompanyTable from '@/components/tables/CompanyTable'
+import LocationTable from '@/components/tables/LocationTable'
 import Pagination from '@/components/tables/Pagination'
 import Button from '@/components/ui/button/Button'
 import { useModal } from '@/hooks/useModal'
@@ -21,7 +23,7 @@ export interface CompanyType {
 }
 type Company = { id: number; name: string }
 
-const PageCompany = () => {
+const PageLocation = () => {
 
     // Systems
     const { isOpen, openModal, closeModal } = useModal();
@@ -40,7 +42,7 @@ const PageCompany = () => {
 
     const fetchData = async () => {
         try {
-            const res = await api.get(`/api/company/all`, {
+            const res = await api.get(`/api/location/all`, {
                 params: { page, search }
             })
             if (res.status === 200) {
@@ -75,10 +77,10 @@ const PageCompany = () => {
             setLoading(true)
             let res = null
             if (selected) {
-                res = await api.put(`/api/company/${selected.id}`, data)
+                res = await api.put(`/api/location/${selected.id}`, data)
 
             } else {
-                res = await api.post(`/api/company/add`, data)
+                res = await api.post(`/api/location/add`, data)
             }
             if (res?.status === 200 || res?.status === 201) {
                 toast.success("ทำรายการสำเร็จ")
@@ -104,10 +106,11 @@ const PageCompany = () => {
     }
 
 
+
     const handleDelete = async (id: number) => {
         confirmDelete(async () => {
             try {
-                await api.delete(`/api/company/${id}`)
+                await api.delete(`/api/location/${id}`)
                 await fetchData()
             } catch (error) {
                 console.log(error);
@@ -121,7 +124,7 @@ const PageCompany = () => {
 
             {/* Dialogs */}
             {isOpen && (
-                <Companyadd
+                <LocationAdd
                     isOpen={isOpen}
                     closeModal={closeModal}
                     onSubmit={handleSave}
@@ -131,7 +134,7 @@ const PageCompany = () => {
             )}
 
             <div>
-                <PageBreadcrumb pageTitle="จัดการข้อมูลบริษัท" />
+                <PageBreadcrumb pageTitle="จัดการข้อมูลสถานที่อบรม" />
                 <div className="space-y-6">
                     <ComponentCard title="">
 
@@ -149,7 +152,7 @@ const PageCompany = () => {
                             </div>
                         </div>
 
-                        <CompanyTable
+                        <LocationTable
                             data={data}
                             loading={loading}
                             handleDelete={handleDelete}
@@ -170,4 +173,4 @@ const PageCompany = () => {
     )
 }
 
-export default PageCompany
+export default PageLocation

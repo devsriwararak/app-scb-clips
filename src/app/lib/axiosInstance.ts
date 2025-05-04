@@ -48,7 +48,7 @@ api.interceptors.response.use(
         return api(originalRequest);
 
       } catch (refreshError) {
-        await signOut({ callbackUrl: "/login" });
+        await signOut({ callbackUrl: "/auth/signin" });
         return Promise.reject(refreshError);
       }
     }

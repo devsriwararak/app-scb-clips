@@ -32,6 +32,10 @@ const navItems: NavItem[] = [
     name: "ข้อมูลพื้นฐาน",
     subItems: [
       { name: "ข้อมูลบริษัท", path: "/admin/company", pro: false },
+      { name: "ข้อมูลสถานที่อบรม", path: "/admin/location", pro: false },
+      { name: "ข้อมูลวิทยากร", path: "/admin/lecturer", pro: false },
+      { name: "ข้อมูลวีดีโอ", path: "/", pro: false },
+      { name: "ข้อมูลคำถาม", path: "/", pro: false },
       { name: "Ecommerce", path: "/", pro: false },
     ],
   },
