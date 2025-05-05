@@ -19,6 +19,9 @@ import { pageSizeForIndexTable } from "@/app/lib/tools";
 interface Company {
     id: number;
     name: string;
+    video :FileList
+    detail: string
+    timeAdvert: number
 }
 
 interface CompanyTableProps {
@@ -31,7 +34,7 @@ interface CompanyTableProps {
 
 }
 
-export default function LocationTable({ data, loading, handleDelete ,handleAdd, currentPage}: CompanyTableProps) {
+export default function VideoTable({ data, loading, handleDelete ,handleAdd, currentPage}: CompanyTableProps) {
 
     // States
     const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
@@ -71,6 +74,12 @@ export default function LocationTable({ data, loading, handleDelete ,handleAdd, 
                                     isHeader
                                     className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
                                 >
+                                    ตั้งเวลา
+                                </TableCell>
+                                <TableCell
+                                    isHeader
+                                    className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+                                >
                                     Auctions
                                 </TableCell>
 
@@ -89,6 +98,11 @@ export default function LocationTable({ data, loading, handleDelete ,handleAdd, 
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                         {order.name}
                                     </TableCell>
+
+                                    <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                                       {order.timeAdvert} นาที
+                                    </TableCell>
+
 
                                     <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                                         <div className="relative inline-block ">

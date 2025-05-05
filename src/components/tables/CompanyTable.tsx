@@ -59,7 +59,7 @@ export default function CompanyTable({ data, loading, handleDelete, handleAdd, c
                                     isHeader
                                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                                 >
-                                    id
+                                    ลำดับ
                                 </TableCell>
                                 <TableCell
                                     isHeader
@@ -69,7 +69,7 @@ export default function CompanyTable({ data, loading, handleDelete, handleAdd, c
                                 </TableCell>
                                 <TableCell
                                     isHeader
-                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                                    className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
                                 >
                                     Auctions
                                 </TableCell>
@@ -90,7 +90,7 @@ export default function CompanyTable({ data, loading, handleDelete, handleAdd, c
                                         {order.name}
                                     </TableCell>
 
-                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                    <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                                         <div className="relative inline-block ">
                                             <button onClick={() => toggleDropdown(order.id)} className="dropdown-toggle">
                                                 <MoreDotIcon className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" />

@@ -6,14 +6,18 @@ import { confirmDelete } from '@/app/lib/tools'
 import ComponentCard from '@/components/common/ComponentCard'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import Input from '@/components/form/input/InputField'
+import Label from '@/components/form/Label'
+import Select from '@/components/form/Select'
 import Companyadd from '@/components/modals/Companyadd'
-import LecturerAdd from '@/components/modals/Lectureradd'
 import LocationAdd from '@/components/modals/LocationAdd'
+import QuestionAdd from '@/components/modals/QuestionAdd'
 import CompanyTable from '@/components/tables/CompanyTable'
-import LecturerTable from '@/components/tables/LecturerTable'
+import LocationTable from '@/components/tables/LocationTable'
 import Pagination from '@/components/tables/Pagination'
+import QuestionTable from '@/components/tables/QuestionTable'
 import Button from '@/components/ui/button/Button'
 import { useModal } from '@/hooks/useModal'
+import { ChevronDownIcon } from '@/icons'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -24,7 +28,7 @@ export interface CompanyType {
 }
 type Company = { id: number; name: string }
 
-const PageLecturer = () => {
+const PageQuestion = () => {
 
     // Systems
     const { isOpen, openModal, closeModal } = useModal();
@@ -43,7 +47,7 @@ const PageLecturer = () => {
 
     const fetchData = async () => {
         try {
-            const res = await api.get(`/api/lecturer/all`, {
+            const res = await api.get(`/api/question/all`, {
                 params: { page, search }
             })
             if (res.status === 200) {
@@ -78,10 +82,10 @@ const PageLecturer = () => {
             setLoading(true)
             let res = null
             if (selected) {
-                res = await api.put(`/api/lecturer/${selected.id}`, data)
+                res = await api.put(`/api/question/${selected.id}`, data)
 
             } else {
-                res = await api.post(`/api/lecturer/add`, data)
+                res = await api.post(`/api/question/add`, data)
             }
             if (res?.status === 200 || res?.status === 201) {
                 toast.success("ทำรายการสำเร็จ")
@@ -106,16 +110,17 @@ const PageLecturer = () => {
         }
     }
 
+
+
     const handleDelete = async (id: number) => {
         confirmDelete(async () => {
             try {
-                const res = await api.delete(`/api/lecturer/${id}`)
-
+                const res = await api.delete(`/api/question/${id}`)
+                
                 if (res.status === 200) {
                     toast.success('ทำรายการสำเร็จ')
                     await fetchData()
                 }
-
             } catch (error) {
                 console.log(error);
 
@@ -128,7 +133,7 @@ const PageLecturer = () => {
 
             {/* Dialogs */}
             {isOpen && (
-                <LecturerAdd
+                <QuestionAdd
                     isOpen={isOpen}
                     closeModal={closeModal}
                     onSubmit={handleSave}
@@ -138,25 +143,27 @@ const PageLecturer = () => {
             )}
 
             <div>
-                <PageBreadcrumb pageTitle="จัดการข้อมูลสถานที่อบรม" />
+                <PageBreadcrumb pageTitle="จัดการข้อมูลคำถาม-ระหว่างเรียน" />
                 <div className="space-y-6">
                     <ComponentCard title="">
 
                         <div className='flex justify-between items-center gap-4'>
-                            <div className='w-2/3'>
+                            <div className='w-2/3 '>
                                 <Input
                                     placeholder='ค้นหา'
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && setSearch(search)}
+
                                 />
+
                             </div>
                             <div className='w-1/3 flex justify-end'>
                                 <Button size="sm" onClick={() => handleAdd('create')}>เพิ่มข้อมูล</Button>
                             </div>
                         </div>
 
-                        <LecturerTable
+                        <QuestionTable
                             data={data}
                             loading={loading}
                             handleDelete={handleDelete}
@@ -177,4 +184,4 @@ const PageLecturer = () => {
     )
 }
 
-export default PageLecturer
+export default PageQuestion

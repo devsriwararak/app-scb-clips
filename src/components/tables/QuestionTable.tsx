@@ -31,7 +31,7 @@ interface CompanyTableProps {
 
 }
 
-export default function LocationTable({ data, loading, handleDelete ,handleAdd, currentPage}: CompanyTableProps) {
+export default function QuestionTable({ data, loading, handleDelete ,handleAdd, currentPage}: CompanyTableProps) {
 
     // States
     const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);

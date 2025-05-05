@@ -110,6 +110,7 @@ interface InputProps {
   hint?: string;
   value?: string | number;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  accept?: string
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
@@ -130,6 +131,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     hint,
     value,
     onKeyDown,
+    accept
   } = props;
 
   let inputClasses = `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${className}`;
@@ -161,6 +163,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         className={inputClasses}
         value={value}
         onKeyDown={onKeyDown}
+        accept={accept}
       />
       {hint && (
         <p

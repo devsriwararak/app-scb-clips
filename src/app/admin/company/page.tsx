@@ -107,8 +107,13 @@ const PageCompany = () => {
     const handleDelete = async (id: number) => {
         confirmDelete(async () => {
             try {
-                await api.delete(`/api/company/${id}`)
-                await fetchData()
+                const res = await api.delete(`/api/company/${id}`)
+
+                if (res.status === 200) {
+                    toast.success('ทำรายการสำเร็จ')
+                    await fetchData()
+                }
+
             } catch (error) {
                 console.log(error);
 

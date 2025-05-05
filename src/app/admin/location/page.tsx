@@ -110,8 +110,13 @@ const PageLocation = () => {
     const handleDelete = async (id: number) => {
         confirmDelete(async () => {
             try {
-                await api.delete(`/api/location/${id}`)
-                await fetchData()
+                const res = await api.delete(`/api/location/${id}`)
+                
+                if (res.status === 200) {
+                    toast.success('ทำรายการสำเร็จ')
+                    await fetchData()
+                }
+
             } catch (error) {
                 console.log(error);
 

@@ -6,25 +6,28 @@ import { confirmDelete } from '@/app/lib/tools'
 import ComponentCard from '@/components/common/ComponentCard'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import Input from '@/components/form/input/InputField'
-import Companyadd from '@/components/modals/Companyadd'
-import LecturerAdd from '@/components/modals/Lectureradd'
-import LocationAdd from '@/components/modals/LocationAdd'
-import CompanyTable from '@/components/tables/CompanyTable'
-import LecturerTable from '@/components/tables/LecturerTable'
+import QuestionEndAdd from '@/components/modals/QuestionEndAdd'
 import Pagination from '@/components/tables/Pagination'
+import QuestionEndTable from '@/components/tables/QuestionEndTable'
 import Button from '@/components/ui/button/Button'
 import { useModal } from '@/hooks/useModal'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
+interface QuestionItem {
+    question: string
+    status: number
+}
+
 export interface CompanyType {
     id: number
     name: string
+    questionEndList: QuestionItem[]
 }
-type Company = { id: number; name: string }
+type Company = { id: number; name: string; questions: QuestionItem[] }
 
-const PageLecturer = () => {
+const PageQuestionEnd = () => {
 
     // Systems
     const { isOpen, openModal, closeModal } = useModal();
@@ -43,7 +46,7 @@ const PageLecturer = () => {
 
     const fetchData = async () => {
         try {
-            const res = await api.get(`/api/lecturer/all`, {
+            const res = await api.get(`/api/questionEnd/all`, {
                 params: { page, search }
             })
             if (res.status === 200) {
@@ -66,22 +69,29 @@ const PageLecturer = () => {
         if (type === "create") {
             setSelected(null);
         } else if (type === "edit" && item) {
-            setSelected(item)
+            setSelected({
+                id: item.id,
+                name: item.name,
+                questions: item.questionEndList?.map((q) => ({
+                    question: q.question,
+                    status: q.status,
+                })) ?? [],
+            })
+
         }
         openModal()
     }
 
-    const handleSave = async (data: { name: string }) => {
-        try {
-            console.log({ data });
+    const handleSave = async (data: { name: string; questions: { question: string; status: number }[] }) => {
 
+        try {
             setLoading(true)
             let res = null
             if (selected) {
-                res = await api.put(`/api/lecturer/${selected.id}`, data)
+                res = await api.put(`/api/location/${selected.id}`, data)
 
             } else {
-                res = await api.post(`/api/lecturer/add`, data)
+                res = await api.post(`/api/questionEnd/add`, data)
             }
             if (res?.status === 200 || res?.status === 201) {
                 toast.success("ทำรายการสำเร็จ")
@@ -106,10 +116,12 @@ const PageLecturer = () => {
         }
     }
 
+
+
     const handleDelete = async (id: number) => {
         confirmDelete(async () => {
             try {
-                const res = await api.delete(`/api/lecturer/${id}`)
+                const res = await api.delete(`/api/questionEnd/${id}`)
 
                 if (res.status === 200) {
                     toast.success('ทำรายการสำเร็จ')
@@ -128,7 +140,7 @@ const PageLecturer = () => {
 
             {/* Dialogs */}
             {isOpen && (
-                <LecturerAdd
+                <QuestionEndAdd
                     isOpen={isOpen}
                     closeModal={closeModal}
                     onSubmit={handleSave}
@@ -156,7 +168,7 @@ const PageLecturer = () => {
                             </div>
                         </div>
 
-                        <LecturerTable
+                        <QuestionEndTable
                             data={data}
                             loading={loading}
                             handleDelete={handleDelete}
@@ -177,4 +189,5 @@ const PageLecturer = () => {
     )
 }
 
-export default PageLecturer
+export default PageQuestionEnd
+

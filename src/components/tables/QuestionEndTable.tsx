@@ -15,10 +15,16 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { pageSizeForIndexTable } from "@/app/lib/tools";
 
 
+interface QuestionItem {
+    question: string
+    status: number
+}
 
 interface Company {
     id: number;
     name: string;
+    questionEndList : QuestionItem[]
+
 }
 
 interface CompanyTableProps {
@@ -31,7 +37,7 @@ interface CompanyTableProps {
 
 }
 
-export default function LocationTable({ data, loading, handleDelete ,handleAdd, currentPage}: CompanyTableProps) {
+export default function QuestionEndTable({ data, loading, handleDelete ,handleAdd, currentPage}: CompanyTableProps) {
 
     // States
     const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);

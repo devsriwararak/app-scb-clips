@@ -6,12 +6,11 @@ import { confirmDelete } from '@/app/lib/tools'
 import ComponentCard from '@/components/common/ComponentCard'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import Input from '@/components/form/input/InputField'
-import Companyadd from '@/components/modals/Companyadd'
-import LecturerAdd from '@/components/modals/Lectureradd'
 import LocationAdd from '@/components/modals/LocationAdd'
-import CompanyTable from '@/components/tables/CompanyTable'
-import LecturerTable from '@/components/tables/LecturerTable'
+import VideoAdd from '@/components/modals/VideoAdd'
+import LocationTable from '@/components/tables/LocationTable'
 import Pagination from '@/components/tables/Pagination'
+import VideoTable from '@/components/tables/VideoTable'
 import Button from '@/components/ui/button/Button'
 import { useModal } from '@/hooks/useModal'
 import axios from 'axios'
@@ -21,17 +20,19 @@ import { toast } from 'react-toastify'
 export interface CompanyType {
     id: number
     name: string
+    video: FileList
+    detail: string
+    timeAdvert: number
 }
-type Company = { id: number; name: string }
 
-const PageLecturer = () => {
+const PageVideo = () => {
 
     // Systems
     const { isOpen, openModal, closeModal } = useModal();
 
     // States
     const [data, setData] = useState<CompanyType[]>([])
-    const [selected, setSelected] = useState<Company | null>(null)
+    const [selected, setSelected] = useState<CompanyType | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
 
@@ -43,7 +44,7 @@ const PageLecturer = () => {
 
     const fetchData = async () => {
         try {
-            const res = await api.get(`/api/lecturer/all`, {
+            const res = await api.get(`/api/vdo/all`, {
                 params: { page, search }
             })
             if (res.status === 200) {
@@ -71,17 +72,15 @@ const PageLecturer = () => {
         openModal()
     }
 
-    const handleSave = async (data: { name: string }) => {
+    const handleSave = async (formData: FormData) => {
         try {
-            console.log({ data });
-
             setLoading(true)
             let res = null
             if (selected) {
-                res = await api.put(`/api/lecturer/${selected.id}`, data)
-
+                formData.append("id", selected.id.toString());
+                res = await api.put(`/api/vdo/upload/${selected.id}`, formData)
             } else {
-                res = await api.post(`/api/lecturer/add`, data)
+                res = await api.post(`/api/vdo/upload`, formData)
             }
             if (res?.status === 200 || res?.status === 201) {
                 toast.success("ทำรายการสำเร็จ")
@@ -102,14 +101,15 @@ const PageLecturer = () => {
 
         } finally {
             setLoading(false)
-
         }
     }
+
+
 
     const handleDelete = async (id: number) => {
         confirmDelete(async () => {
             try {
-                const res = await api.delete(`/api/lecturer/${id}`)
+                const res = await api.delete(`/api/vdo/${id}`)
 
                 if (res.status === 200) {
                     toast.success('ทำรายการสำเร็จ')
@@ -118,7 +118,7 @@ const PageLecturer = () => {
 
             } catch (error) {
                 console.log(error);
-
+                toast.error('เกิดข้อผิดพลาด')
             }
         })
     }
@@ -128,17 +128,18 @@ const PageLecturer = () => {
 
             {/* Dialogs */}
             {isOpen && (
-                <LecturerAdd
+                <VideoAdd
                     isOpen={isOpen}
                     closeModal={closeModal}
                     onSubmit={handleSave}
                     defaultValues={selected || undefined}
                     error={error}
+                    loading={loading}
                 />
             )}
 
             <div>
-                <PageBreadcrumb pageTitle="จัดการข้อมูลสถานที่อบรม" />
+                <PageBreadcrumb pageTitle="จัดการข้อมูลวีดีโอ" />
                 <div className="space-y-6">
                     <ComponentCard title="">
 
@@ -156,7 +157,7 @@ const PageLecturer = () => {
                             </div>
                         </div>
 
-                        <LecturerTable
+                        <VideoTable
                             data={data}
                             loading={loading}
                             handleDelete={handleDelete}
@@ -177,4 +178,5 @@ const PageLecturer = () => {
     )
 }
 
-export default PageLecturer
+export default PageVideo
+
