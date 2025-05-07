@@ -13,17 +13,17 @@ import { FiAirplay } from "react-icons/fi";
 
 export interface MemberDataType {
   id: number
-  titleName: String
-  fname: String
-  lname :String
-  idCard : string
-  phone :string
+  titleName: string
+  fname: string
+  lname: string
+  idCard: string
+  phone: string
   companyId: number
   locationId: number
   lecturerId: number
-  createdAt: String
-  dateOfTraining: String
-  dateEndCertificate: String
+  createdAt: string
+  dateOfTraining: string
+  dateEndCertificate: string
 }
 
 

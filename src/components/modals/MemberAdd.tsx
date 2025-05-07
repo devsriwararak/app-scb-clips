@@ -12,6 +12,7 @@ import axios from 'axios'
 import ReactSelect from 'react-select'
 import { MemberDataType } from '@/app/page'
 import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
 
 
 interface Props {
@@ -36,7 +37,6 @@ const options = [
 
 const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
 
-    // const { register, handleSubmit, reset, control } = useForm({ defaultValues })
 
     const { register, control, reset, handleSubmit } = useForm<MemberDataType>({
         defaultValues: {
@@ -54,6 +54,8 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
             dateEndCertificate: "",
         },
     })
+
+    const router = useRouter()
 
     // State
     const [companyData, setCompanyData] = useState<SelectType[]>([])
@@ -138,11 +140,40 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
             fetchDataLecturer()
         }
     }, [isOpen])
+    const onSubmit = async(data: any) => {
+        const payload = {
+            ...data,
+            dateOfTraining: data.dateOfTraining
+                ? new Date(data.dateOfTraining).toISOString()
+                : null
+        };
 
-    const onSubmit = (data: any) => {
-        console.log("ข้อมูลที่จะ submit:", data)
-    }
+        if (!payload) return toast.error('ส่งข้อมูลไม่ครบ')
 
+            try {
+                const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/add`, payload)
+
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res.data);
+                    const idCard = res.data.result.idCard
+
+                    if(!idCard) return 
+                    
+                    toast.success('ทำรายการสำเร็จ')
+                    router.replace(`/member/video/${idCard}`)    
+                }
+            } catch (error) {
+                console.log(error);
+                if (axios.isAxiosError(error) && error.response) {
+                    toast.error(error.response.data.message)
+                } else {
+                    toast.error("เกิดข้อผิดพลาดบางอย่าง")
+                    console.error("Unexpected error:", error)
+                }
+                
+            }
+
+    };
     const onError = (errors: any) => {
 
         const fieldNames = Object.keys(errors).map((key) => {
@@ -274,17 +305,17 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
                                 rules={{
                                     required: "กรุณากรอกเลขบัตรประชาชน",
                                     validate: (value) =>
-                                        value.length === 13 || "กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก",
+                                        value.length === 10 || "กรุณากรอกเบอร์โทร์ให้ครบ 10 หลัก",
                                 }}
                                 render={({ field }) => (
                                     <Input
                                         {...field}
                                         type="text"
                                         inputMode="numeric"
-                                        maxLength={13}
+                                        maxLength={10}
                                         placeholder="กรอกเลขบัตรประชาชน"
                                         onChange={(e) => {
-                                            const value = e.target.value.replace(/\D/g, "").slice(0, 13)
+                                            const value = e.target.value.replace(/\D/g, "").slice(0, 10)
                                             field.onChange(value)
                                         }}
                                     />
@@ -295,15 +326,41 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
 
                         <div className='w-full'>
                             <div>
-                                <DatePicker
-                                    id="date-picker"
-                                    label="เลือกวันที่เข้าอบรม"
-                                    placeholder="เลือกวันที่"
-                                    onChange={(dates, currentDateString) => {
-                                        // Handle your logic
-                                        console.log({ dates, currentDateString });
-                                    }}
+
+                                {/* <Controller
+                                    name="dateOfTraining"
+                                    control={control}
+                                    rules={{ required: "กรุณาเลือกวันที่อบรม" }}
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            id="dateOfTraining"
+                                            label="เลือกวันที่เข้าอบรม"
+                                            placeholder="เลือกวันที่"
+                                            value={field.value}
+                                            onChange={(date) => {
+                                                field.onChange(date) 
+                                            }}
+                                        />
+                                    )}
+                                /> */}
+
+                                <Controller
+                                    name="dateOfTraining"
+                                    control={control}
+                                    rules={{ required: "กรุณาเลือกวันที่อบรม" }}
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            id="dateOfTraining"
+                                            label="เลือกวันที่เข้าอบรม"
+                                            placeholder="เลือกวันที่"
+                                            defaultDate={field.value}
+                                            onChange={(dates: Date[]) => {
+                                                field.onChange(dates?.[0] || null); // ✅ เก็บวันที่เดียว
+                                            }}
+                                        />
+                                    )}
                                 />
+
                             </div>
                         </div>
                     </div>
