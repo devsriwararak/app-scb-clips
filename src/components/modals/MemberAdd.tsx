@@ -159,8 +159,6 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
             let res
             if (defaultValues) {
                 res = await api.put(`/api/member/${defaultValues.id}`, payload)
-                if(fetchData) await fetchData()
-
             } else {
                  res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/add`, payload)
             }
@@ -171,6 +169,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
                 if (!idCard) return
 
+                if(fetchData) await fetchData()
                 toast.success('ทำรายการสำเร็จ')
                 if (type === "admin") {
                     closeModal()

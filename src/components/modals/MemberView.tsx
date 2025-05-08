@@ -89,11 +89,20 @@ const MemberView = ({ isOpen, closeModal, defaultValues }: Props) => {
                             </div>
                             <div>
                                 <p className={tag_p_class_title}>วันที่ใบเซอร์หมดอายุ</p>
-                                <p className={tag_p_class_detail}>{ moment(defaultValues?.dateEndCertificate).format('D MMMM YYYY') }</p>
+                                <p className={tag_p_class_detail}>{ 
+                                defaultValues?.dateEndCertificate 
+                                ?  moment(defaultValues?.dateEndCertificate).format('D MMMM YYYY')
+                                : " ยังอบรมไม่เสร็จ " 
+                                }</p>
                             </div>
                             <div>
                                 <p className={tag_p_class_title}>เหลือเวลาอีก / วัน</p>
-                                <p className={tag_p_class_detail}>  {moment(defaultValues?.dateEndCertificate).diff(moment(), 'days')} วัน
+                                <p className={tag_p_class_detail}>  {
+                                    defaultValues?.dateEndCertificate
+                                    ? moment(defaultValues?.dateEndCertificate).diff(moment(), 'days') 
+                                    : " 0 วัน"
+                                
+                                } 
                                 </p>
                             </div>
                         </div>

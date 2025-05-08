@@ -110,7 +110,7 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                         {order.company.name}
                                     </TableCell>
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                        <p className="bg-green-200 rounded-md py-0.5 text-center"> เหลือ 30 วัน</p>
+                                        <p className="bg-green-200 rounded-md py-0.5 text-center"> เหลือ 0 วัน</p>
                                     </TableCell>
 
                                     <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
