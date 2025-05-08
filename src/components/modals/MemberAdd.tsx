@@ -10,9 +10,10 @@ import { ChevronDownIcon } from '@/icons'
 import DatePicker from '../form/date-picker'
 import axios from 'axios'
 import ReactSelect from 'react-select'
-import { MemberDataType } from '@/app/page'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import { MemberDataType } from '@/app/admin/member/page'
+import api from '@/app/lib/axiosInstance'
 
 
 interface Props {
@@ -21,6 +22,8 @@ interface Props {
     // onSubmit: (data: { name: string }) => void
     defaultValues?: MemberDataType;
     error: string
+    type: string
+    fetchData? : ()=> Promise<void>  
 }
 
 interface SelectType {
@@ -35,7 +38,7 @@ const options = [
 ];
 
 
-const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
+const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }: Props) => {
 
 
     const { register, control, reset, handleSubmit } = useForm<MemberDataType>({
@@ -140,7 +143,9 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
             fetchDataLecturer()
         }
     }, [isOpen])
-    const onSubmit = async(data: any) => {
+
+
+    const onSubmit = async (data: any) => {
         const payload = {
             ...data,
             dateOfTraining: data.dateOfTraining
@@ -150,30 +155,41 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
 
         if (!payload) return toast.error('ส่งข้อมูลไม่ครบ')
 
-            try {
-                const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/add`, payload)
+        try {
+            let res
+            if (defaultValues) {
+                res = await api.put(`/api/member/${defaultValues.id}`, payload)
+                if(fetchData) await fetchData()
 
-                if (res.status === 200 || res.status === 201) {
-                    console.log(res.data);
-                    const idCard = res.data.result.idCard
-
-                    if(!idCard) return 
-                    
-                    toast.success('ทำรายการสำเร็จ')
-                    router.replace(`/member/video/${idCard}`)    
-                }
-            } catch (error) {
-                console.log(error);
-                if (axios.isAxiosError(error) && error.response) {
-                    toast.error(error.response.data.message)
-                } else {
-                    toast.error("เกิดข้อผิดพลาดบางอย่าง")
-                    console.error("Unexpected error:", error)
-                }
-                
+            } else {
+                 res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/add`, payload)
             }
 
+            if (res.status === 200 || res.status === 201) {
+                console.log(res.data);
+                const idCard = res.data.result.idCard
+
+                if (!idCard) return
+
+                toast.success('ทำรายการสำเร็จ')
+                if (type === "admin") {
+                    closeModal()
+                } else {
+                    router.replace(`/member/video/${idCard}`)
+                }
+
+            }
+        } catch (error) {
+            console.log(error);
+            if (axios.isAxiosError(error) && error.response) {
+                toast.error(error.response.data.message)
+            } else {
+                toast.error("เกิดข้อผิดพลาดบางอย่าง")
+                console.error("Unexpected error:", error)
+            }
+        }
     };
+    
     const onError = (errors: any) => {
 
         const fieldNames = Object.keys(errors).map((key) => {
@@ -217,8 +233,8 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
                                         <ReactSelect<SelectType>
                                             options={options}
                                             placeholder="เลือก"
-                                            isSearchable
-                                            value={companyData.find(option => option.value === String(field.value))}
+                                            isClearable={true}
+                                            value={options.find(option => option.value == String(field.value))}
                                             onChange={(option) => field.onChange(option?.value)}
                                         />
                                     )}
@@ -283,7 +299,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
                                         <ReactSelect<SelectType>
                                             options={companyData}
                                             placeholder="เลือกบริษัท"
-                                            isSearchable
+                                            isClearable={true}
                                             value={companyData.find(option => option.value === String(field.value))}
                                             onChange={(option) => field.onChange(option?.value)}
                                         />
@@ -298,7 +314,6 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
 
                         <div className='w-full'>
                             <Label>เบอร์โทรศัพท์</Label>
-
                             <Controller
                                 name="phone"
                                 control={control}
@@ -321,29 +336,10 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
                                     />
                                 )}
                             />
-
                         </div>
 
                         <div className='w-full'>
                             <div>
-
-                                {/* <Controller
-                                    name="dateOfTraining"
-                                    control={control}
-                                    rules={{ required: "กรุณาเลือกวันที่อบรม" }}
-                                    render={({ field }) => (
-                                        <DatePicker
-                                            id="dateOfTraining"
-                                            label="เลือกวันที่เข้าอบรม"
-                                            placeholder="เลือกวันที่"
-                                            value={field.value}
-                                            onChange={(date) => {
-                                                field.onChange(date) 
-                                            }}
-                                        />
-                                    )}
-                                /> */}
-
                                 <Controller
                                     name="dateOfTraining"
                                     control={control}
@@ -377,7 +373,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
                                         <ReactSelect<SelectType>
                                             options={locationData}
                                             placeholder="เลือกสถานที่อบรม"
-                                            isSearchable
+                                            isClearable={true}
                                             value={locationData.find(option => option.value === String(field.value))}
                                             onChange={(option) => field.onChange(option?.value)}
                                         />
@@ -396,20 +392,17 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error }: Props) => {
                                         <ReactSelect<SelectType>
                                             options={lecturerData}
                                             placeholder="เลือกวิทยากร"
-                                            isSearchable
+                                            isClearable={true}
                                             value={lecturerData.find(option => option.value === String(field.value))}
                                             onChange={(option) => field.onChange(option?.value)}
                                         />
                                     )}
                                 />
-
                             </div>
                         </div>
                     </div>
 
-
                     {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
-
                     <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
                         <Button size="sm" variant="outline" onClick={closeModal} >
                             ยกเลิก

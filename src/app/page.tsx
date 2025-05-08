@@ -10,24 +10,24 @@ import React, { useState } from 'react'
 import { FaBeer } from "react-icons/fa";
 import { FiUserPlus } from "react-icons/fi";
 import { FiAirplay } from "react-icons/fi";
+import { MemberDataType } from './admin/member/page';
 
-export interface MemberDataType {
-  id: number
-  titleName: string
-  fname: string
-  lname: string
-  idCard: string
-  phone: string
-  companyId: number
-  locationId: number
-  lecturerId: number
-  createdAt: string
-  dateOfTraining: string
-  dateEndCertificate: string
-}
+// export interface MemberDataType {
+//   id: number
+//   titleName: string
+//   fname: string
+//   lname: string
+//   idCard: string
+//   phone: string
+//   companyId: number
+//   locationId: number
+//   lecturerId: number
+//   createdAt: string
+//   dateOfTraining: string
+//   dateEndCertificate: string
+// }
 
 
-type Company = MemberDataType
 
 
 const page = () => {
@@ -85,6 +85,7 @@ const page = () => {
           closeModal={closeModal}
           defaultValues={selected || undefined}
           error={error}
+          type="member"
         />
       )}
 
