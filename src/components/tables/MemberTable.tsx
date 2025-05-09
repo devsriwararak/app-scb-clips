@@ -9,7 +9,7 @@ import {
 } from "../ui/table";
 
 
-import { ArrowDownIcon, BoltIcon, EyeIcon, MailIcon, MoreDotIcon, PencilIcon, TrashBinIcon } from "@/icons";
+import { BoltIcon, EyeIcon, MailIcon, MoreDotIcon, PencilIcon, TrashBinIcon } from "@/icons";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { pageSizeForIndexTable } from "@/app/lib/tools";
@@ -27,7 +27,7 @@ interface CompanyTableProps {
 
 }
 
-export default function MemberTable({ data, loading, handleDelete, handleAdd, currentPage, setSelected }: CompanyTableProps) {
+export default function MemberTable({ data, loading, handleDelete, handleAdd, currentPage }: CompanyTableProps) {
 
     // States
     const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
@@ -157,7 +157,7 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
 
                                                 <hr />
                                                 <DropdownItem
-                                                    onItemClick={() => { closeDropdown; handleDelete(order.id) }}
+                                                    onItemClick={() => { closeDropdown(); handleDelete(order.id) }}
                                                     className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                 >
                                                     <TrashBinIcon />   ลบ

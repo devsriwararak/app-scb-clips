@@ -9,7 +9,7 @@ const PageVideoMember = ({params}: Props) => {
 
     const { idCard } = use(params)
     return (
-    <div>PageVideoMember {idCard || "xxxxx"}</div>
+    <div className='text-2xl'> ตรวจสอบผ่าน รหัสบัตรประชาชนของคุณคือ : {idCard || "xxxxx"}</div>
   )
 }
 

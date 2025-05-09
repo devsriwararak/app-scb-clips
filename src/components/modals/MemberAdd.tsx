@@ -4,9 +4,7 @@ import Label from '@/components/form/Label'
 import Input from '@/components/form/input/InputField'
 import { Modal } from '@/components/ui/modal'
 import Button from '@/components/ui/button/Button'
-import { Controller, useForm } from 'react-hook-form'
-import Select from '../form/Select'
-import { ChevronDownIcon } from '@/icons'
+import { Controller, FieldErrors, useForm } from 'react-hook-form'
 import DatePicker from '../form/date-picker'
 import axios from 'axios'
 import ReactSelect from 'react-select'
@@ -23,7 +21,7 @@ interface Props {
     defaultValues?: MemberDataType;
     error: string
     type: string
-    fetchData? : ()=> Promise<void>  
+    fetchData?: () => Promise<void>
 }
 
 interface SelectType {
@@ -145,7 +143,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
     }, [isOpen])
 
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: MemberDataType) => {
         const payload = {
             ...data,
             dateOfTraining: data.dateOfTraining
@@ -160,7 +158,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
             if (defaultValues) {
                 res = await api.put(`/api/member/${defaultValues.id}`, payload)
             } else {
-                 res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/add`, payload)
+                res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/add`, payload)
             }
 
             if (res.status === 200 || res.status === 201) {
@@ -169,7 +167,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
                 if (!idCard) return
 
-                if(fetchData) await fetchData()
+                if (fetchData) await fetchData()
                 toast.success('ทำรายการสำเร็จ')
                 if (type === "admin") {
                     closeModal()
@@ -188,8 +186,8 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
             }
         }
     };
-    
-    const onError = (errors: any) => {
+
+    const onError = (errors: FieldErrors<MemberDataType>) => {
 
         const fieldNames = Object.keys(errors).map((key) => {
             switch (key) {

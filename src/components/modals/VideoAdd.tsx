@@ -15,6 +15,13 @@ interface Props {
     loading : boolean
 }
 
+interface VideoFormInputs {
+    name: string
+    detail?: string
+    timeAdvert: number 
+    video: FileList
+}
+
 
 const VideoAdd = ({ isOpen, closeModal, onSubmit, defaultValues, error, loading }: Props) => {
 
@@ -30,11 +37,11 @@ const VideoAdd = ({ isOpen, closeModal, onSubmit, defaultValues, error, loading 
         }
     }, [isOpen, defaultValues, reset])
 
-    const handleFormSubmit = ( data: any)=> {
+    const handleFormSubmit = ( data: VideoFormInputs)=> {
         const formData = new FormData()
         formData.append("name", data.name)
         formData.append("detail", data.detail || "")
-        formData.append("timeAdvert", data.timeAdvert || "")
+    formData.append("timeAdvert", String(data.timeAdvert))
 
         if(data.video && data.video[0]){
             formData.append("video", data.video[0])

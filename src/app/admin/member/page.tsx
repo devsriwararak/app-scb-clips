@@ -49,7 +49,7 @@ const PageMemberAdmin = () => {
     // States
     const [data, setData] = useState<MemberDataType[]>([])
     const [selected, setSelected] = useState<MemberDataType | null>(null)
-    const [loading, setLoading] = useState(false)
+    const [loading] = useState(false)
     const [error, setError] = useState("")
     const [modalType, setModalType] = useState<string | null>(null)
 

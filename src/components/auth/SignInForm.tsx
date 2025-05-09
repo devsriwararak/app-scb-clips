@@ -17,7 +17,6 @@ export default function SignInForm() {
 
 
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
 
   // States
   const [username, setUsername] = useState('')
