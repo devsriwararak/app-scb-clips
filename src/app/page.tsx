@@ -9,23 +9,6 @@ import { FiAirplay } from "react-icons/fi";
 import { MemberDataType } from './admin/member/page';
 import CheckIdCard from '@/components/modals/CheckIdCard';
 
-// export interface MemberDataType {
-//   id: number
-//   titleName: string
-//   fname: string
-//   lname: string
-//   idCard: string
-//   phone: string
-//   companyId: number
-//   locationId: number
-//   lecturerId: number
-//   createdAt: string
-//   dateOfTraining: string
-//   dateEndCertificate: string
-// }
-
-
-
 
 const Page = () => {
   // Systems
@@ -62,9 +45,6 @@ const Page = () => {
           closeModal={closeModal}
         />
       )}
-
-
-
 
 
       <ComponentCard title="" className='flex flex-row gap-4 py-8 px-6 '>
