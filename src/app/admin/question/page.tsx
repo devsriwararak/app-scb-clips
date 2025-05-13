@@ -18,8 +18,9 @@ import { toast } from 'react-toastify'
 export interface CompanyType {
     id: number
     name: string
+    answer: string;
 }
-type Company = { id: number; name: string }
+type Company = { id: number; name: string; answer: string; }
 
 const PageQuestion = () => {
 

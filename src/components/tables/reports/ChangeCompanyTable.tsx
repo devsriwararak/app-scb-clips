@@ -6,37 +6,29 @@ import {
     TableCell,
     TableHeader,
     TableRow,
-} from "../ui/table";
+} from "../../ui/table";
 
 
-import {  MoreDotIcon, PencilIcon, TrashBinIcon } from "@/icons";
-import { Dropdown } from "../ui/dropdown/Dropdown";
-import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import {  EyeIcon, MoreDotIcon, TrashBinIcon } from "@/icons";
+import { Dropdown } from "../../ui/dropdown/Dropdown";
+import { DropdownItem } from "../../ui/dropdown/DropdownItem";
 import { pageSizeForIndexTable } from "@/app/lib/tools";
+import { MemberDataForViewType, MemberDataType } from "@/app/admin/reports/changeCompany/page";
 
-
-
-interface Company {
-    id: number;
-    name: string;
-    answer: string;
-}
 
 interface CompanyTableProps {
-    data: Company[];
+    data: MemberDataType[]
     loading: boolean;
     handleDelete: (id: number) => void
-    handleAdd : (type: "create" | "edit", item? : Company) => void
-    currentPage : number
-
-
+    handleAdd: (type: "create" | "edit" | "view", item?: MemberDataType) => void
+    currentPage: number
+    setSelected: React.Dispatch<React.SetStateAction<MemberDataForViewType | null>>
 }
 
-export default function QuestionTable({ data, loading, handleDelete ,handleAdd, currentPage}: CompanyTableProps) {
+export default function ChangeCompanyTable({ data, loading, handleDelete, handleAdd, currentPage }: CompanyTableProps) {
 
     // States
     const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
-
 
     function toggleDropdown(id: number) {
         setOpenDropdownId((prev) => (prev === id ? null : id))
@@ -48,8 +40,13 @@ export default function QuestionTable({ data, loading, handleDelete ,handleAdd, 
 
     if (loading) return <p className="p-4">Loading...</p>;
 
+    console.log(data);
+
+
     return (
         <div className=" rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+
+
             <div className="max-w-full overflow-x-visible">
                 <div className="w-full">
                     <Table>
@@ -66,7 +63,26 @@ export default function QuestionTable({ data, loading, handleDelete ,handleAdd, 
                                     isHeader
                                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                                 >
-                                    ชื่อ
+                                    เลชบัตรประชาชน
+                                </TableCell>
+                                <TableCell
+                                    isHeader
+                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                                >
+                                    ชื่อ-สกุล
+                                </TableCell>
+
+                                <TableCell
+                                    isHeader
+                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                                >
+                                    บริษัท-เก่า
+                                </TableCell>
+                                <TableCell
+                                    isHeader
+                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                                >
+                                    บริษัท-ใหม่
                                 </TableCell>
                                 <TableCell
                                     isHeader
@@ -88,7 +104,16 @@ export default function QuestionTable({ data, loading, handleDelete ,handleAdd, 
                                         </span>
                                     </TableCell>
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                        {order.name}
+                                        {order.member.idCard}
+                                    </TableCell>
+                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                        {order.member.titleName}   {"  "}{order.member.fname}{"  "}{order.member.lname}
+                                    </TableCell>
+                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                        {order.company.name}
+                                    </TableCell>
+                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                        {order.newCompany}
                                     </TableCell>
 
                                     <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
@@ -104,13 +129,13 @@ export default function QuestionTable({ data, loading, handleDelete ,handleAdd, 
 
                                             >
                                                 <DropdownItem
-                                                    onItemClick={()=>handleAdd('edit', order)}
                                                     className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                                                    onClick={() => handleAdd('view', order)}
                                                 >
-                                                    <PencilIcon />   แก้ไข
+                                                    <EyeIcon />   ดูข้อมูล
                                                 </DropdownItem>
                                                 <DropdownItem
-                                                    onItemClick={() => {closeDropdown(); handleDelete(order.id)}}
+                                                    onItemClick={() => { closeDropdown(); handleDelete(order.id) }}
                                                     className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                                 >
                                                     <TrashBinIcon />   ลบ

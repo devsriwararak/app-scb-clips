@@ -4,12 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
-import {
+import { GoCircle } from "react-icons/go";
 
+import {
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-
+  PieChartIcon,
   UserCircleIcon,
 } from "../icons/index";
 // import SidebarWidget from "./SidebarWidget";
@@ -18,7 +19,7 @@ type NavItem = {
   name: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
+  subItems?: { name: string; path: string; pro?: boolean; new?: boolean; icon: React.ReactNode }[];
 };
 
 const navItems: NavItem[] = [
@@ -26,12 +27,12 @@ const navItems: NavItem[] = [
     icon: <GridIcon />,
     name: "ข้อมูลพื้นฐาน",
     subItems: [
-      { name: "ข้อมูลบริษัท", path: "/admin/company", pro: false },
-      { name: "ข้อมูลสถานที่อบรม", path: "/admin/location", pro: false },
-      { name: "ข้อมูลวิทยากร", path: "/admin/lecturer", pro: false },
-      { name: "ข้อมูลวีดีโอ", path: "/admin/video", pro: false },
-      { name: "ข้อมูลคำถาม-ระหว่างเรียน", path: "/admin/question", pro: false },
-      { name: "ข้อมูลคำถาม-สุดท้าย", path: "/admin/questionEnd", pro: false },
+      { icon: <GoCircle size={8} />, name: "ข้อมูลบริษัท", path: "/admin/company", pro: false },
+      { icon: <GoCircle size={8} />, name: "ข้อมูลสถานที่อบรม", path: "/admin/location", pro: false },
+      { icon: <GoCircle size={8} />, name: "ข้อมูลวิทยากร", path: "/admin/lecturer", pro: false },
+      { icon: <GoCircle size={8} />, name: "ข้อมูลวีดีโอ", path: "/admin/video", pro: false },
+      { icon: <GoCircle size={8} />, name: "ข้อมูลคำถาม-ระหว่างเรียน", path: "/admin/question", pro: false },
+      { icon: <GoCircle size={8} />, name: "ข้อมูลคำถาม-สุดท้าย", path: "/admin/questionEnd", pro: false },
       // { name: "Ecommerce", path: "/", pro: false },
     ],
   },
@@ -73,14 +74,13 @@ const navItems: NavItem[] = [
 ];
 
 const othersItems: NavItem[] = [
-  // {
-  //   icon: <PieChartIcon />,
-  //   name: "Charts",
-  //   subItems: [
-  //     { name: "Line Chart", path: "/line-chart", pro: false },
-  //     { name: "Bar Chart", path: "/bar-chart", pro: false },
-  //   ],
-  // },
+  {
+    icon: <PieChartIcon />,
+    name: "ประวัตื",
+    subItems: [
+      { icon: <GoCircle size={8} />, name: "คนที่เคยย้ายบริษัท", path: "/admin/reports/changeCompany", pro: false },
+    ],
+  },
   // {
   //   icon: <BoxCubeIcon />,
   //   name: "UI Elements",
@@ -118,8 +118,8 @@ const AppSidebar: React.FC = () => {
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}
               className={`menu-item group  ${openSubmenu?.type === menuType && openSubmenu?.index === index
-                  ? "menu-item-active"
-                  : "menu-item-inactive"
+                ? "menu-item-active"
+                : "menu-item-inactive"
                 } cursor-pointer ${!isExpanded && !isHovered
                   ? "lg:justify-center"
                   : "lg:justify-start"
@@ -127,8 +127,8 @@ const AppSidebar: React.FC = () => {
             >
               <span
                 className={` ${openSubmenu?.type === menuType && openSubmenu?.index === index
-                    ? "menu-item-icon-active"
-                    : "menu-item-icon-inactive"
+                  ? "menu-item-icon-active"
+                  : "menu-item-icon-inactive"
                   }`}
               >
                 {nav.icon}
@@ -139,9 +139,9 @@ const AppSidebar: React.FC = () => {
               {(isExpanded || isHovered || isMobileOpen) && (
                 <ChevronDownIcon
                   className={`ml-auto w-5 h-5 transition-transform duration-200  ${openSubmenu?.type === menuType &&
-                      openSubmenu?.index === index
-                      ? "rotate-180 text-brand-500"
-                      : ""
+                    openSubmenu?.index === index
+                    ? "rotate-180 text-brand-500"
+                    : ""
                     }`}
                 />
               )}
@@ -155,8 +155,8 @@ const AppSidebar: React.FC = () => {
               >
                 <span
                   className={`${isActive(nav.path)
-                      ? "menu-item-icon-active"
-                      : "menu-item-icon-inactive"
+                    ? "menu-item-icon-active"
+                    : "menu-item-icon-inactive"
                     }`}
                 >
                   {nav.icon}
@@ -182,12 +182,13 @@ const AppSidebar: React.FC = () => {
             >
               <ul className="mt-2 space-y-1 ml-9">
                 {nav.subItems.map((subItem) => (
-                  <li key={subItem.name}>
+                  <li key={subItem.name} className="flex flex-row gap-0 items-center">
+                    {subItem.icon}
                     <Link
                       href={subItem.path}
                       className={`menu-dropdown-item ${isActive(subItem.path)
-                          ? "menu-dropdown-item-active"
-                          : "menu-dropdown-item-inactive"
+                        ? "menu-dropdown-item-active"
+                        : "menu-dropdown-item-inactive"
                         }`}
                     >
                       {subItem.name}
@@ -195,8 +196,8 @@ const AppSidebar: React.FC = () => {
                         {subItem.new && (
                           <span
                             className={`ml-auto ${isActive(subItem.path)
-                                ? "menu-dropdown-badge-active"
-                                : "menu-dropdown-badge-inactive"
+                              ? "menu-dropdown-badge-active"
+                              : "menu-dropdown-badge-inactive"
                               } menu-dropdown-badge `}
                           >
                             new
@@ -205,8 +206,8 @@ const AppSidebar: React.FC = () => {
                         {subItem.pro && (
                           <span
                             className={`ml-auto ${isActive(subItem.path)
-                                ? "menu-dropdown-badge-active"
-                                : "menu-dropdown-badge-inactive"
+                              ? "menu-dropdown-badge-active"
+                              : "menu-dropdown-badge-inactive"
                               } menu-dropdown-badge `}
                           >
                             pro
@@ -342,8 +343,8 @@ const AppSidebar: React.FC = () => {
             <div>
               <h2
                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
+                  ? "lg:justify-center"
+                  : "justify-start"
                   }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
@@ -358,15 +359,15 @@ const AppSidebar: React.FC = () => {
             <div className="">
               <h2
                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
+                  ? "lg:justify-center"
+                  : "justify-start"
                   }`}
               >
-                {/* {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
+                {isExpanded || isHovered || isMobileOpen ? (
+                  "Reports"
                 ) : (
                   <HorizontaLDots />
-                )} */}
+                )}
               </h2>
               {renderMenuItems(othersItems, "others")}
             </div>
