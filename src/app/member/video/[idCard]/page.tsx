@@ -1,6 +1,7 @@
 'use client'
 import ComponentCard from '@/components/common/ComponentCard'
 import Policy from '@/components/modals/Policy'
+// import BrowserCheck from '@/components/others/BrowserCheck'
 import Button from '@/components/ui/button/Button'
 import { useModal } from '@/hooks/useModal'
 import axios from 'axios'
@@ -36,8 +37,7 @@ const PageVideoMember = ({ params }: Props) => {
   const [check, setCheck] = useState(false)
   const [videos, setVideos] = useState<VideoType[]>([])
   const [question, setQuestion] = useState<Question | null>(null)
-
-
+  // const [checkSafari, setCheckSafari] = useState(false)
 
   // State Check video
   const [watchedVideos, setWatchedVideos] = useState<Set<string>>(new Set())
@@ -107,12 +107,12 @@ const PageVideoMember = ({ params }: Props) => {
   // สุ่มคำถามจาก API (fetchQuestion())
   // แสดง popup (setShowQuestionPopup(true))
   // ตั้ง setTimeout เพื่อ redirect หลัง 2 นาทีถ้าไม่ตอบ
-  const handleTimeUpdate = (video: HTMLVideoElement) => {
+  const handleTimeUpdate = async (video: HTMLVideoElement) => {
     const { shouldShow, key } = shouldShowQuestion(video, currentVideo, showQuestionPopup, questionAlreadyShownFor)
 
     if (shouldShow) {
       setQuestionAlreadyShownFor(prev => new Set(prev).add(key))
-      fetchQuestion()
+      await fetchQuestion()
       setShowQuestionPopup(true)
       setQuestionAlreadyShownFor(prev => new Set(prev).add(key))
 
@@ -124,15 +124,14 @@ const PageVideoMember = ({ params }: Props) => {
     }
   }
 
-
-
   const handleAnswered = (userAnswer: 'YES' | 'NO') => {
     const isCorrect = userAnswer === question?.answer
-    const questionText = `คำถามที่ ${answerResults.length + 1} : ${isCorrect ? "ตอบถูก" : "ตอบผิด"} `
+    const questionText = `คำถามที่ ${answerResults.length + 1} : ${question?.name} = ${userAnswer} เฉลย ${isCorrect ? "คุณตอบถูก" : "คุณตอบผิด"} `
     setAnswerResults(prev => [...prev, questionText])
 
     setShowQuestionPopup(false)
     if (redirectTimeoutId) clearTimeout(redirectTimeoutId)
+      videoRef.current?.play()
   }
 
   const updateStatusMember = async () => {
@@ -141,7 +140,7 @@ const PageVideoMember = ({ params }: Props) => {
         idCard
       })
       console.log(res.data);
-      
+
       if (res.status === 200) {
         return true
       }
@@ -180,7 +179,7 @@ const PageVideoMember = ({ params }: Props) => {
     //     if (status) setTimeout(() => router.push(`/member/questions/${idCard}`), 500)
     //   }
     // }
-    if(nextIndex < videos.length){
+    if (nextIndex < videos.length) {
       setCurrentVideo(videos[nextIndex])
     }
   }
@@ -271,7 +270,9 @@ const PageVideoMember = ({ params }: Props) => {
       <div className=' container mx-auto  lg:h-screen flex justify-center items-center'>
 
         {/* Dialogs */}
-        {isOpen && (
+        {/* <BrowserCheck setCheck={setCheck} setCheckSafari={setCheckSafari} /> */}
+
+        { isOpen && (
           <Policy
             isOpen={isOpen}
             closeModal={closeModal}
@@ -279,26 +280,13 @@ const PageVideoMember = ({ params }: Props) => {
           />
         )}
 
-        {/* {showQuiz && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-bold mb-4">แบบสอบถามหลังเรียน</h2>
-              <p>คุณดูวิดีโอจบครบทุกคลิปแล้ว 🎉</p>
-              <button
-                onClick={() => router.push('/')}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
-              >
-                ตกลง
-              </button>
-            </div>
-          </div>
-        )} */}
-
-        {showQuestionPopup && (
+        {showQuestionPopup && question && (
           <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
             <div className="bg-white p-6 w-1/2 rounded-lg shadow-md ">
               <h3 className="text-xl font-semibold mb-4">คำถามจากวิดีโอ</h3>
               <p>{question?.name || 'กำลังโหลดคำถาม...'}</p>
+
+              <small className='py-2 text-red-600'>หากไม่ตอบคำถามภายใน 3 นาที จะเริ่มใหม่</small>
               <div className="flex flex-col md:flex-row justify-end gap-2 mt-4">
                 <Button
                   size="sm"
@@ -313,9 +301,7 @@ const PageVideoMember = ({ params }: Props) => {
                   <Button size="sm" variant="primary" onClick={() => handleAnswered('NO')} className="bg-red-500 text-white px-4 py-2 rounded">ผิด</Button>
                 </div>
                 <div className="flex justify-end gap-2 mt-4">
-
                 </div>
-
               </div>
             </div>
           </div>
@@ -352,6 +338,11 @@ const PageVideoMember = ({ params }: Props) => {
                         preload="metadata"
                         onEnded={handleVideoEnded}
                         className="w-full h-[400px] bg-black rounded"
+                        onTimeUpdate={() => {
+                          if (videoRef.current) {
+                            handleTimeUpdate(videoRef.current)
+                          }
+                        }}
                       />
 
                       {answerResults.length > 0 && (

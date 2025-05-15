@@ -16,6 +16,7 @@ import { pageSizeForIndexTable } from "@/app/lib/tools";
 
 
 interface QuestionItem {
+    id: number
     question: string
     status: number
 }

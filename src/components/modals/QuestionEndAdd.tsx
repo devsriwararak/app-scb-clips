@@ -8,11 +8,13 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import Switch from '../form/switch/Switch'
 
 interface QuestionItem {
+    id: number
     question: string
     status: number
 }
 
 interface FormValues {
+    id: number
     name: string
     questions: QuestionItem[]
 }
@@ -109,7 +111,7 @@ const QuestionEndAdd = ({ isOpen, closeModal, onSubmit, defaultValues, error }: 
                                 </div>
                             ))}
                         </div>
-                        <Button type="button" onClick={() => append({ question: '', status: 0 })} className="mt-6">
+                        <Button type="button" onClick={() => append({ id:0,question: '', status: 0 })} className="mt-6">
                             + เพิ่มคำถาม
                         </Button>
                     </div>

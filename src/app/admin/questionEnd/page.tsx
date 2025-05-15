@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 interface QuestionItem {
+    id: number
     question: string
     status: number
 }
@@ -73,6 +74,7 @@ const PageQuestionEnd = () => {
                 id: item.id,
                 name: item.name,
                 questions: item.questionEndList?.map((q) => ({
+                    id: q.id,
                     question: q.question,
                     status: q.status,
                 })) ?? [],
@@ -82,13 +84,13 @@ const PageQuestionEnd = () => {
         openModal()
     }
 
-    const handleSave = async (data: { name: string; questions: { question: string; status: number }[] }) => {
+    const handleSave = async (data: { name: string; questions: { id: number, question: string; status: number }[] }) => {
 
         try {
             setLoading(true)
             let res = null
             if (selected) {
-                res = await api.put(`/api/location/${selected.id}`, data)
+                res = await api.put(`/api/questionEnd/${selected.id}`, data)
 
             } else {
                 res = await api.post(`/api/questionEnd/add`, data)

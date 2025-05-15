@@ -34,7 +34,7 @@ const CheckIdCard = ({ isOpen, closeModal }: Props) => {
 
             if (res.status === 200 || res.status === 201) {
                 console.log(res.data);
-                const idCard = res.data
+                const idCard = res.data.idCard
                 
                 if (!idCard) return
                 router.replace(`/member/video/${idCard}`)
