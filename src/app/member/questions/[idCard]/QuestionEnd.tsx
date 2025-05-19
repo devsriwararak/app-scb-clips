@@ -94,6 +94,24 @@ const QuestionEnd = ({ idCard }: propType) => {
             console.log(res.data);
 
             if (res.status === 200) {
+                await sendEmail()
+                return true
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+        return false
+    }
+
+        const sendEmail = async () => {
+        try {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/certificate/send`, {
+                idCard
+            })
+            console.log(res.data);
+
+            if (res.status === 200) {
                 return true
             }
         } catch (error) {

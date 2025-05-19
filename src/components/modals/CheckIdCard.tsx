@@ -16,28 +16,48 @@ moment.locale('th')
 interface Props {
     isOpen: boolean
     closeModal: () => void
+    type: string
 }
 
-const CheckIdCard = ({ isOpen, closeModal }: Props) => {
+const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
 
     const { control, handleSubmit } = useForm<MemberDataType>({ defaultValues: { idCard: "" }, })
-      const router = useRouter()
+    const router = useRouter()
 
-    const onSubmit = async (data: {idCard: string}) => {
+    const onSubmit = async (data: { idCard: string }) => {
 
         const payload = data.idCard
 
         if (!payload) return toast.error('ส่งข้อมูลไม่ครบ')
 
         try {
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/checkIdCard`, {idCard : payload})
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/checkIdCard`, { idCard: payload })
 
             if (res.status === 200 || res.status === 201) {
                 console.log(res.data);
                 const idCard = res.data.idCard
-                
+                const dateOfTraining = res.data.dateOfTraining
+                let status = 0
+
                 if (!idCard) return
-                router.replace(`/member/video/${idCard}`)
+                if (type === "online") {
+                    status = 0
+                } else {
+                    status = 1
+                }
+
+                if (dateOfTraining) {
+                    if (status === 0) {
+                        router.replace(`/member/video/${idCard}`)
+                    } else if (status === 1) {
+                        sessionStorage.setItem("type", type)
+                        router.replace(`/member/questions/${idCard}`)
+                    }
+                } else {
+                    toast.error('ใบเซอร์ของคุณหมดอายุแล้ว กรุณาแจ้ง ADMIN แก้ไขข้อมูลลงทะเบียนให้')
+                    return
+                }
+
             }
         } catch (error) {
             console.log(error);
@@ -52,14 +72,14 @@ const CheckIdCard = ({ isOpen, closeModal }: Props) => {
 
     const onError = (errors: FieldErrors<MemberDataType>) => {
 
-            const fieldNames = Object.keys(errors).map((key) => {
-                switch (key) {
-                    case "idCard": return "เลขบัตรประชาชน";
-                    default: return key;
-                }
-            });
-            toast.error(`กรุณากรอกข้อมูลให้ครบถ้วน: \n- ${fieldNames.join("\n- ")}`)
-        };
+        const fieldNames = Object.keys(errors).map((key) => {
+            switch (key) {
+                case "idCard": return "เลขบัตรประชาชน";
+                default: return key;
+            }
+        });
+        toast.error(`กรุณากรอกข้อมูลให้ครบถ้วน: \n- ${fieldNames.join("\n- ")}`)
+    };
 
 
 
@@ -68,7 +88,7 @@ const CheckIdCard = ({ isOpen, closeModal }: Props) => {
             <div className="no-scrollbar relative w-full max-w-[700px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                 <div className=" pr-14">
                     <h4 className="mb-2 text-xl font-semibold text-gray-800 dark:text-white/90">
-                        ระบบตรวจสอบสิทธิ์
+                        ระบบตรวจสอบสิทธิ์ {type}
                     </h4>
 
                     <div className='mt-4'>
@@ -82,32 +102,32 @@ const CheckIdCard = ({ isOpen, closeModal }: Props) => {
                                 placeholder='กรอกเลขบัตรประชาชน'
                             /> */}
 
-                                           <div className='w-full'>
-                            <Label>เลขบัตรประชาชน 13 หลัก</Label>
+                            <div className='w-full'>
+                                <Label>เลขบัตรประชาชน 13 หลัก</Label>
 
-                            <Controller
-                                name="idCard"
-                                control={control}
-                                rules={{
-                                    required: "กรุณากรอกเลขบัตรประชาชน",
-                                    validate: (value) =>
-                                        value.length === 13 || "กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก",
-                                }}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        type="text"
-                                        inputMode="numeric"
-                                        maxLength={13}
-                                        placeholder="กรอกเลขบัตรประชาชน"
-                                        onChange={(e) => {
-                                            const value = e.target.value.replace(/\D/g, "").slice(0, 13)
-                                            field.onChange(value)
-                                        }}
-                                    />
-                                )}
-                            />
-                        </div>
+                                <Controller
+                                    name="idCard"
+                                    control={control}
+                                    rules={{
+                                        required: "กรุณากรอกเลขบัตรประชาชน",
+                                        validate: (value) =>
+                                            value.length === 13 || "กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก",
+                                    }}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            type="text"
+                                            inputMode="numeric"
+                                            maxLength={13}
+                                            placeholder="กรอกเลขบัตรประชาชน"
+                                            onChange={(e) => {
+                                                const value = e.target.value.replace(/\D/g, "").slice(0, 13)
+                                                field.onChange(value)
+                                            }}
+                                        />
+                                    )}
+                                />
+                            </div>
 
                             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-center ">
                                 <Button size="sm" type="submit" className='w-full' >

@@ -19,23 +19,29 @@ const PageQuestion = ({ params }: Props) => {
     const [check, setCheck] = useState(false)
     const [error, setError] = useState<string>("")
 
-    const checkStatus = async () => {
+    const checkStatus = async (sessionType: string | null) => {
         try {
+
 
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/checkIdCard`, {
                 idCard: idCard
             })
+
 
             if (res.status === 200) {
                 const statusVideoEnd = res.data.statusVideoEnd
                 const statusQuestionEnd = res.data.statusQuestionEnd
                 if (statusVideoEnd === 0) {
                     setCheck(false)
-                    setError("คุณยังดูวีดีโอไม่จบ ไม่สามารถทำข้อสอบได้ !!")
-                    toast.error('กรุณาดูวีดีโอให้จบก่อน !!')
-                    setTimeout(() => {
-                        rounter.push(`/`)
-                    }, 2000);
+                    if (!sessionType) {
+                        setError("คุณยังดูวีดีโอไม่จบ ไม่สามารถทำข้อสอบได้ !!")
+                        toast.error('กรุณาดูวีดีโอให้จบก่อน !!')
+                        setTimeout(() => {
+                            rounter.push(`/`)
+                        }, 2000);
+                    } else {
+                        if (statusQuestionEnd === 0) setCheck(true)
+                    }
                 } else if (statusQuestionEnd === 1) {
                     setCheck(false)
                     setError("คุณทำข้อสอบผ่านแล้ว  !!")
@@ -53,7 +59,14 @@ const PageQuestion = ({ params }: Props) => {
     }
 
     useEffect(() => {
-        checkStatus()
+        const sessionType = sessionStorage.getItem("type")
+        if (sessionType) {
+            checkStatus(sessionType)
+        } else {
+            checkStatus(null)
+        }
+
+
     }, [])
 
     return (
@@ -66,7 +79,7 @@ const PageQuestion = ({ params }: Props) => {
             {!check && (
                 <div className='bg-white p-6 rounded-lg shadow-lg w-1/2 text-center py-16'>
                     <h2 className='text-3xl'>{error}</h2>
-                    <p className='mt-4'>จะไม่สามารถเข้ามาหน้านี้ได้ จนกว่าใบเซอร์จะหมดอายุ</p>
+                    <p className='mt-4'>ไม่สามารถเข้ามาหน้านี้ได้ จนกว่าใบเซอร์จะหมดอายุ</p>
 
                     <Button onClick={() => rounter.push('/')} className='mt-6' >กลับหน้าหลัก</Button>
                 </div>

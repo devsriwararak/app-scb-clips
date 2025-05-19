@@ -56,8 +56,9 @@ const PageVideoMember = ({ params }: Props) => {
         idCard: idCard
       })
       if (res.status === 200 && res.data.data.length > 0) {
+        console.log(res.data);
+        
         openModal()
-        // setCheck(true)
         setVideos(res.data.data)
         setCurrentVideo(res.data.data[0])
       }

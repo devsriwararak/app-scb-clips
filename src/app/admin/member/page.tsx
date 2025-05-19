@@ -24,6 +24,7 @@ export interface MemberDataType {
     lname: string
     idCard: string
     phone: string
+    email :string
     companyId: number
     locationId: number
     lecturerId: number
@@ -58,6 +59,7 @@ const PageMemberAdmin = () => {
     const [search, setSearch] = useState("")
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
+    const [totalItems, setTotalItem] = useState(0)
     const [companyData, setCompanyData] = useState<SelectType[]>([])
     const [selectedCompany, setSelectedCompany] = useState<string | null>(null)
 
@@ -72,6 +74,7 @@ const PageMemberAdmin = () => {
 
                 setData(res.data.data)
                 setTotalPages(res.data.pagination.totalPage)
+                setTotalItem(res.data.pagination.totalItems)
             }
         } catch (error) {
             console.log(error);
@@ -183,7 +186,8 @@ const PageMemberAdmin = () => {
                                 )}
 
                             </div>
-                            <div className='w-1/3 flex justify-end'>
+                            <div className='w-1/3 flex justify-end gap-4 items-center'>
+
                                 <Button size="sm" onClick={() => handleAdd('create')}>เพิ่มข้อมูล</Button>
                             </div>
                         </div>
@@ -198,11 +202,14 @@ const PageMemberAdmin = () => {
 
                         />
 
-                        <Pagination
-                            currentPage={page}
-                            totalPages={totalPages}
-                            onPageChange={setPage}
-                        />
+                        <div className='flex justify-between items-center'>
+                            <Pagination
+                                currentPage={page}
+                                totalPages={totalPages}
+                                onPageChange={setPage}
+                            />
+                            <p className='text-gray-500'>ทั้งหมด {totalItems} รายการ </p>
+                        </div>
 
                     </ComponentCard>
                 </div>

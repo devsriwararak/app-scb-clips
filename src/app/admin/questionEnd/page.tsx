@@ -1,6 +1,5 @@
 'use client'
 
-
 import api from '@/app/lib/axiosInstance'
 import { confirmDelete } from '@/app/lib/tools'
 import ComponentCard from '@/components/common/ComponentCard'

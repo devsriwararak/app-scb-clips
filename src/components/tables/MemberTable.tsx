@@ -14,6 +14,8 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { pageSizeForIndexTable } from "@/app/lib/tools";
 import { MemberDataType } from "@/app/admin/member/page";
+import api from "@/app/lib/axiosInstance";
+import { toast } from "react-toastify";
 
 
 interface CompanyTableProps {
@@ -22,7 +24,7 @@ interface CompanyTableProps {
     handleDelete: (id: number) => void
     handleAdd: (type: "create" | "edit" | "view", item?: MemberDataType) => void
     currentPage: number
-    setSelected : React.Dispatch<React.SetStateAction<MemberDataType | null>>
+    setSelected: React.Dispatch<React.SetStateAction<MemberDataType | null>>
 
 
 }
@@ -38,6 +40,40 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
 
     function closeDropdown() {
         setOpenDropdownId(null);
+    }
+
+    const handleViewCertificate = async (idCard: string) => {
+        try {
+            const res = await api.post(`/api/member/certificate`, { idCard }, {
+                responseType: 'blob'
+            })
+            const blob = new Blob([res.data], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            window.open(url, '_blank');
+
+        } catch (error: unknown) {
+            console.log(error);
+            toast.error('ยังทำข้อสอบไม่ผ่าน !!')
+
+        }
+    }
+
+    const handleSendCertificate = async (idCard: string) => {
+        try {
+            toast.warning("กำลังทำรายการ")
+
+            const res = await api.post(`/api/member/certificate/send`, { idCard })
+            console.log(res.data);
+
+            if (res.status === 200) {
+                toast.success(res.data.message)
+            }
+
+        } catch (error: unknown) {
+            console.log(error);
+            toast.error('ยังทำข้อสอบไม่ผ่าน !!')
+
+        }
     }
 
     if (loading) return <p className="p-4">Loading...</p>;
@@ -141,16 +177,13 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                                 <hr />
                                                 <DropdownItem
                                                     className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                                                    onClick={() => handleViewCertificate(order.idCard)}
                                                 >
                                                     <BoltIcon />   ดูใบเซอร์
                                                 </DropdownItem>
                                                 <DropdownItem
                                                     className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                                >
-                                                    <PencilIcon />   แก้ไขใบเซอร์
-                                                </DropdownItem>
-                                                <DropdownItem
-                                                    className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                                                    onClick={() => handleSendCertificate(order.idCard)}
                                                 >
                                                     <MailIcon />   ส่งอีเมล์
                                                 </DropdownItem>

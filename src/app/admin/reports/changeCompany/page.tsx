@@ -29,6 +29,7 @@ export interface MemberDataType {
         lname: string;
         idCard: string;
         phone: string;
+        email :string
         companyId: number;
         locationId: number;
         lecturerId: number;
@@ -49,6 +50,7 @@ export interface MemberDataForViewType {
     lname: string
     idCard: string
     phone: string
+    email :string
     companyId: number
     locationId: number
     lecturerId: number

@@ -43,6 +43,7 @@ const Page = () => {
         <CheckIdCard
           isOpen={isOpen}
           closeModal={closeModal}
+          type={'online'}
         />
       )}
 

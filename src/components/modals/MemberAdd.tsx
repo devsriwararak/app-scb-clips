@@ -47,6 +47,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
             lname: "",
             idCard: "",
             phone: "",
+            email: "",
             companyId: 0,
             locationId: 0,
             lecturerId: 0,
@@ -74,6 +75,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                     lname: defaultValues?.lname || "",
                     idCard: defaultValues?.idCard || "",
                     phone: defaultValues?.phone || "",
+                    email : defaultValues.email || "",
                     companyId: defaultValues?.companyId || 0,
                     locationId: defaultValues?.locationId || 0,
                     lecturerId: defaultValues?.lecturerId || 0,
@@ -195,6 +197,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                 case "fname": return "ชื่อจริง";
                 case "lname": return "นามสกุล";
                 case "idCard": return "เลขบัตรประชาชน";
+                 case "email": return "กรอก E-mail";
                 case "phone": return "เบอร์โทร";
                 case "companyId": return "บริษัท";
                 case "locationId": return "สถานที่อบรม";
@@ -220,7 +223,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
                     <div className="    pb-3 flex gap-4">
                         <div>
-                            <Label>เลือกคำนำหน้าชื่อ</Label>
+                            <Label>คำนำหน้าชื่อ</Label>
                             <div className="relative">
                                 <Controller
                                     name="titleName"
@@ -254,6 +257,19 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                 {...register("lname", { required: true })}
                                 type="text"
                                 placeholder='กรอกนามสกุล'
+                            />
+                        </div>
+                    </div>
+
+                    <div className="   pb-3 flex gap-4 mt-2">
+
+                        <div className='w-full'>
+                            <Label>E-mail</Label>
+                            <Input
+                                {...register("email", { required: true })}
+                                type="email"
+                                placeholder='กรอกนามสกุล'
+                                
                             />
                         </div>
                     </div>
