@@ -126,6 +126,7 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
 
                             </TableRow>
                         </TableHeader>
+                  
 
                         {/* Table Body */}
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
