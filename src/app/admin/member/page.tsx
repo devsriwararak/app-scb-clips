@@ -23,6 +23,7 @@ export interface MemberDataType {
     fname: string
     lname: string
     idCard: string
+    idCardType : number
     phone: string
     email :string
     companyId: number

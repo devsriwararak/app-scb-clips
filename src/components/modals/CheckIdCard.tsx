@@ -21,6 +21,7 @@ interface Props {
 
 const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
 
+    // Systems
     const { control, handleSubmit } = useForm<MemberDataType>({ defaultValues: { idCard: "" }, })
     const router = useRouter()
 

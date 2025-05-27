@@ -46,6 +46,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
             fname: "",
             lname: "",
             idCard: "",
+            idCardType: 1,
             phone: "",
             email: "",
             companyId: 0,
@@ -63,19 +64,20 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
     const [companyData, setCompanyData] = useState<SelectType[]>([])
     const [locationData, setLocationData] = useState<SelectType[]>([])
     const [lecturerData, setLecturerData] = useState<SelectType[]>([])
+    const [idCardSwitch, setIdCardSwitch] = useState<number>(defaultValues?.idCardType || 1)
 
     React.useEffect(() => {
         if (isOpen) {
             if (defaultValues) {
-                // reset(defaultValues || { fname: "" })
                 reset({
                     id: defaultValues?.id || 0,
                     titleName: defaultValues?.titleName || "",
                     fname: defaultValues?.fname || "",
                     lname: defaultValues?.lname || "",
                     idCard: defaultValues?.idCard || "",
+                    idCardType : defaultValues.idCardType || 1,
                     phone: defaultValues?.phone || "",
-                    email : defaultValues.email || "",
+                    email: defaultValues.email || "",
                     companyId: defaultValues?.companyId || 0,
                     locationId: defaultValues?.locationId || 0,
                     lecturerId: defaultValues?.lecturerId || 0,
@@ -155,6 +157,9 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
         if (!payload) return toast.error('ส่งข้อมูลไม่ครบ')
 
+        console.log({ payload });
+
+
         try {
             let res
             if (defaultValues) {
@@ -190,14 +195,13 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
     };
 
     const onError = (errors: FieldErrors<MemberDataType>) => {
-
         const fieldNames = Object.keys(errors).map((key) => {
             switch (key) {
                 case "titleName": return "คำนำหน้า";
                 case "fname": return "ชื่อจริง";
                 case "lname": return "นามสกุล";
                 case "idCard": return "เลขบัตรประชาชน";
-                 case "email": return "กรอก E-mail";
+                case "email": return "กรอก E-mail";
                 case "phone": return "เบอร์โทร";
                 case "companyId": return "บริษัท";
                 case "locationId": return "สถานที่อบรม";
@@ -220,7 +224,6 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                 </div>
 
                 <form className="flex flex-col mt-6" onSubmit={handleSubmit(onSubmit, onError)}>
-
                     <div className="    pb-3 flex gap-4">
                         <div>
                             <Label>คำนำหน้าชื่อ</Label>
@@ -239,8 +242,6 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                         />
                                     )}
                                 />
-
-
                             </div>
                         </div>
                         <div>
@@ -269,37 +270,104 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                 {...register("email", { required: true })}
                                 type="email"
                                 placeholder='กรอกนามสกุล'
-                                
+
                             />
                         </div>
                     </div>
 
                     <div className="   pb-3 flex gap-4 mt-2">
                         <div className='w-full'>
-                            <Label>เลขบัตรประชาชน 13 หลัก</Label>
-
-                            <Controller
-                                name="idCard"
-                                control={control}
-                                rules={{
-                                    required: "กรุณากรอกเลขบัตรประชาชน",
-                                    validate: (value) =>
-                                        value.length === 13 || "กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก",
-                                }}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        type="text"
-                                        inputMode="numeric"
-                                        maxLength={13}
-                                        placeholder="กรอกเลขบัตรประชาชน"
-                                        onChange={(e) => {
-                                            const value = e.target.value.replace(/\D/g, "").slice(0, 13)
-                                            field.onChange(value)
+                            {idCardSwitch === 1 && (
+                                <>
+                                    <Label>เลขบัตรประชาชน 13 หลัก</Label>
+                                    <Controller
+                                        name="idCard"
+                                        control={control}
+                                        rules={{
+                                            required: "กรุณากรอกเลขบัตรประชาชน",
+                                            validate: (value) =>
+                                                value.length === 13 || "กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก",
                                         }}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                type="text"
+                                                inputMode="numeric"
+                                                maxLength={13}
+                                                placeholder="กรอกเลขบัตรประชาชน"
+                                                onChange={(e) => {
+                                                    const value = e.target.value.replace(/\D/g, "").slice(0, 13)
+                                                    field.onChange(value)
+                                                }}
+                                            />
+                                        )}
                                     />
-                                )}
-                            />
+                                </>
+                            )}
+                            {idCardSwitch === 2 && (
+                                <>
+                                    <Label>Passport No.</Label>
+                                    <Controller
+                                        name="idCard"
+                                        control={control}
+                                        rules={{
+                                            required: "กรุณากรอกเลขบัตรประชาชน",
+                                            validate: (value) =>
+                                                value.length === 8 || "Please input Passport No for 13 items",
+                                        }}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                type="text"
+                                                maxLength={8}
+                                                placeholder="Enter your Passport No"
+
+                                            />
+                                        )}
+                                    />
+                                </>
+                            )}
+                            <div className='flex flex-row gap-3 items-center mt-2 justify-start'>
+                    
+                                <div>
+                                    <label className="text-sm font-medium text-gray-700">เลือกสัญชาติ</label>
+
+                                    <Controller
+                                        name="idCardType"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <div className="flex items-center space-x-6 mt-2">
+                                                {/* ไทย */}
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="radio"
+                                                        value={1}
+                                                        checked={field.value == 1}
+                                                        onChange={() => {field.onChange(1); setIdCardSwitch(1)}}
+                                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                                    />
+                                                    <span className="text-gray-700">ไทย</span>
+                                                </label>
+
+                                                {/* ต่างชาติ */}
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="radio"
+                                                        value={2}
+                                                        checked={field.value == 2}
+                                                        onChange={() => {field.onChange(2); setIdCardSwitch(2)}}
+                                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                                    />
+                                                    <span className="text-gray-700">ต่างชาติ</span>
+                                                </label>
+                                            </div>
+                                        )}
+                                    />
+                                </div>
+
+
+                            </div>
+
                         </div>
                         <div className='w-full'>
                             <Label>เลือกบริษัท/หจก.</Label>
