@@ -2,7 +2,7 @@ import React from 'react'
 
 const page = () => {
     return (
-        <p>test</p>
+        <p>test zz</p>
         // <div className="px-52 py-4  container mx-auto ">
         //     <div className="flex justify-start">
         //         {/* <img src="data:image/png;base64,<%= member.logoBase64 %>" alt="logo" className="w-20 mb-4 "> */}
