@@ -4,10 +4,10 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function SignInForm() {
@@ -22,6 +22,7 @@ export default function SignInForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const { data: session } = useSession()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,9 +42,8 @@ export default function SignInForm() {
           id: id,
           role: role,
           accessToken: accessToken,
-
         })
-        router.push('/admin')
+     
       } else {
         setError('Login failed');
       }
@@ -53,6 +53,12 @@ export default function SignInForm() {
     }
 
   }
+
+  useEffect(()=> {
+if(session) {
+  router.push('/admin')
+}
+  },[session])
 
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
