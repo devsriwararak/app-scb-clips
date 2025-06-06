@@ -1,7 +1,6 @@
 'use client'
 import ComponentCard from '@/components/common/ComponentCard'
 import Policy from '@/components/modals/Policy'
-// import BrowserCheck from '@/components/others/BrowserCheck'
 import Button from '@/components/ui/button/Button'
 import { useModal } from '@/hooks/useModal'
 import axios from 'axios'
@@ -37,7 +36,6 @@ const PageVideoMember = ({ params }: Props) => {
   const [check, setCheck] = useState(false)
   const [videos, setVideos] = useState<VideoType[]>([])
   const [question, setQuestion] = useState<Question | null>(null)
-  // const [checkSafari, setCheckSafari] = useState(false)
 
   // State Check video
   const [watchedVideos, setWatchedVideos] = useState<Set<string>>(new Set())
@@ -312,31 +310,32 @@ const PageVideoMember = ({ params }: Props) => {
         <ComponentCard title="" className='w-full '   >
           {check ? (
             <div className='text-2xl'>
-              <div className='flex justify-between items-center'>
-                <h2 className='w-1/2 md:3/5 text-sm md:text-xl'>รหัสบัตรประชาชน : {idCard || "xxxxx"}</h2>
+              <div className='flex justify-between items-center px-4'>
+                <h2 className='w-1/2 md:3/5 text-sm md:text-lg'>รหัสบัตรประชาชน : {idCard || "xxxxx"}</h2>
                 <div className='w-1/3 md:w-2/5 flex gap-4  justify-end'>
 
                   <Button size="sm" >
-                    <Link href="/">หน้าหลัก</Link>
+                    <Link href="/">ออกจากวีดีโอ</Link>
                   </Button>
                 </div>
               </div>
 
 
-              <div className="flex flex-col lg:flex-row gap-4 p-4 mt-4">
+              <div className="flex flex-col lg:flex-row gap-4 p-4 ">
                 {/* Player */}
                 <div className="flex-1">
                   {currentVideo && (
-
                     <>
                       <video
                         ref={videoRef}
                         src={`${process.env.NEXT_PUBLIC_API_URL}${currentVideo.filePath}`}
                         muted
-                        controls
+                        controls={false}
                         autoPlay
+                        controlsList="nodownload nofullscreen noremoteplayback"
                         playsInline
                         preload="metadata"
+                        onContextMenu={e => e.preventDefault()}
                         onEnded={handleVideoEnded}
                         className="w-full h-[400px] bg-black rounded"
                         onTimeUpdate={() => {
@@ -354,7 +353,6 @@ const PageVideoMember = ({ params }: Props) => {
                         </div>
                       )}
                     </>
-
                   )}
                 </div>
 
