@@ -306,7 +306,6 @@ const PageVideoMember = ({ params }: Props) => {
           </div>
         )}
 
-
         <ComponentCard title="" className='w-full '   >
           {check ? (
             <div className='text-2xl'>

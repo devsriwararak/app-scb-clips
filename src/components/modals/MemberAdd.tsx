@@ -364,11 +364,9 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                         )}
                                     />
                                 </div>
-
-
                             </div>
-
                         </div>
+                        
                         <div className='w-full'>
                             <Label>เลือกบริษัท/หจก.</Label>
                             <div className="relative">

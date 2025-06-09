@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import Label from '@/components/form/Label'
 import Input from '@/components/form/input/InputField'
 import { Modal } from '@/components/ui/modal'
@@ -22,13 +22,16 @@ interface Props {
 const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
 
     // Systems
-    const { control, handleSubmit } = useForm<MemberDataType>({ defaultValues: { idCard: "" }, })
+    const { control, handleSubmit } = useForm<MemberDataType>({ defaultValues: { idCard: "", idCardType : 1 }, })
     const router = useRouter()
 
-    const onSubmit = async (data: { idCard: string }) => {
+    // State 
+    const [idCardSwitch, setIdCardSwitch] = useState<number>(1)
+
+
+    const onSubmit = async (data: { idCard: string, idCardType :number }) => {
 
         const payload = data.idCard
-
         if (!payload) return toast.error('ส่งข้อมูลไม่ครบ')
 
         try {
@@ -95,18 +98,9 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
                     <div className='mt-4'>
                         <form className="flex flex-col mt-6" onSubmit={handleSubmit(onSubmit, onError)}>
 
-                            {/* <Label>กรอกเลขบัตรประชาชน</Label>
-
-                            <Input
-                                {...register("idCard", { required: true })}
-                                type="text"
-                                placeholder='กรอกเลขบัตรประชาชน'
-                            /> */}
-
                             <div className='w-full'>
-                                <Label>เลขบัตรประชาชน 13 หลัก</Label>
 
-                                <Controller
+                                {/* <Controller
                                     name="idCard"
                                     control={control}
                                     rules={{
@@ -127,7 +121,97 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
                                             }}
                                         />
                                     )}
-                                />
+                                /> */}
+
+                                {idCardSwitch === 1 && (
+                                    <>
+                                        <Label>เลขบัตรประชาชน 13 หลัก</Label>
+                                        <Controller
+                                            name="idCard"
+                                            control={control}
+                                            rules={{
+                                                required: "กรุณากรอกเลขบัตรประชาชน",
+                                                validate: (value) =>
+                                                    value.length === 13 || "กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก",
+                                            }}
+                                            render={({ field }) => (
+                                                <Input
+                                                    {...field}
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    maxLength={13}
+                                                    placeholder="กรอกเลขบัตรประชาชน"
+                                                    onChange={(e) => {
+                                                        const value = e.target.value.replace(/\D/g, "").slice(0, 13)
+                                                        field.onChange(value)
+                                                    }}
+                                                />
+                                            )}
+                                        />
+                                    </>
+                                )}
+                                {idCardSwitch === 2 && (
+                                    <>
+                                        <Label>Passport No.</Label>
+                                        <Controller
+                                            name="idCard"
+                                            control={control}
+                                            rules={{
+                                                required: "กรุณากรอกเลขบัตรประชาชน",
+                                                validate: (value) =>
+                                                    value.length === 8 || "Please input Passport No for 13 items",
+                                            }}
+                                            render={({ field }) => (
+                                                <Input
+                                                    {...field}
+                                                    type="text"
+                                                    maxLength={8}
+                                                    placeholder="Enter your Passport No"
+
+                                                />
+                                            )}
+                                        />
+                                    </>
+                                )}
+                            </div>
+
+                            <div className='flex flex-row gap-3 items-center mt-2 justify-start'>
+
+                                <div>
+                                    <label className="text-sm font-medium text-gray-700">เลือกสัญชาติ</label>
+
+                                    <Controller
+                                        name="idCardType"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <div className="flex items-center space-x-6 mt-2">
+                                                {/* ไทย */}
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="radio"
+                                                        value={1}
+                                                        checked={field.value == 1}
+                                                        onChange={() => { field.onChange(1); setIdCardSwitch(1) }}
+                                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                                    />
+                                                    <span className="text-gray-700">ไทย</span>
+                                                </label>
+
+                                                {/* ต่างชาติ */}
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="radio"
+                                                        value={2}
+                                                        checked={field.value == 2}
+                                                        onChange={() => { field.onChange(2); setIdCardSwitch(2) }}
+                                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                                    />
+                                                    <span className="text-gray-700">ต่างชาติ</span>
+                                                </label>
+                                            </div>
+                                        )}
+                                    />
+                                </div>
                             </div>
 
                             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-center ">
