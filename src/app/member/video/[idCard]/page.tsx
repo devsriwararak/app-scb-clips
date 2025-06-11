@@ -7,6 +7,10 @@ import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { use, useEffect, useRef, useState } from 'react'
+import { FaPlay } from "react-icons/fa6";
+// import { FcCancel, FcCheckmark } from "react-icons/fc";
+
+
 
 interface Props {
   params: Promise<{ idCard: string }>
@@ -16,6 +20,7 @@ interface VideoType {
   name: string
   filePath: string
   timeAdvert: number
+  detail: string
 }
 
 interface Question {
@@ -33,6 +38,7 @@ const PageVideoMember = ({ params }: Props) => {
 
   // States
   const [currentVideo, setCurrentVideo] = useState<VideoType | null>(null)
+  const [currentVideoIndex , setCurrentVideoIndex] = useState<number>(1)
   const [check, setCheck] = useState(false)
   const [videos, setVideos] = useState<VideoType[]>([])
   const [question, setQuestion] = useState<Question | null>(null)
@@ -55,7 +61,7 @@ const PageVideoMember = ({ params }: Props) => {
       })
       if (res.status === 200 && res.data.data.length > 0) {
         console.log(res.data);
-        
+
         openModal()
         setVideos(res.data.data)
         setCurrentVideo(res.data.data[0])
@@ -125,12 +131,12 @@ const PageVideoMember = ({ params }: Props) => {
 
   const handleAnswered = (userAnswer: 'YES' | 'NO') => {
     const isCorrect = userAnswer === question?.answer
-    const questionText = `คำถามที่ ${answerResults.length + 1} : ${question?.name} = ${userAnswer} เฉลย ${isCorrect ? "คุณตอบถูก" : "คุณตอบผิด"} `
+    const questionText = `คำถามที่ ${answerResults.length + 1} : ${question?.name} =  เฉลย ${isCorrect ? " ✔️ คุณตอบถูก" : " ❌ คุณตอบผิด"} `
     setAnswerResults(prev => [...prev, questionText])
 
     setShowQuestionPopup(false)
     if (redirectTimeoutId) clearTimeout(redirectTimeoutId)
-      videoRef.current?.play()
+    videoRef.current?.play()
   }
 
   const updateStatusMember = async () => {
@@ -166,6 +172,7 @@ const PageVideoMember = ({ params }: Props) => {
 
     const currentIndex = videos.findIndex(v => v.filePath === currentVideo?.filePath)
     const nextIndex = currentIndex + 1
+    setCurrentVideoIndex(nextIndex + 1)
 
     // if (nextIndex < videos.length) {
     //   setCurrentVideo(videos[nextIndex])
@@ -266,12 +273,12 @@ const PageVideoMember = ({ params }: Props) => {
 
   return (
     <>
-      <div className=' container mx-auto  lg:h-screen flex justify-center items-center'>
+      <div className=' container mx-auto  lg:h-screen flex justify-center items-center '>
 
         {/* Dialogs */}
         {/* <BrowserCheck setCheck={setCheck} setCheckSafari={setCheckSafari} /> */}
 
-        { isOpen && (
+        {isOpen && (
           <Policy
             isOpen={isOpen}
             closeModal={closeModal}
@@ -309,18 +316,18 @@ const PageVideoMember = ({ params }: Props) => {
         <ComponentCard title="" className='w-full '   >
           {check ? (
             <div className='text-2xl'>
-              <div className='flex justify-between items-center px-4'>
-                <h2 className='w-1/2 md:3/5 text-sm md:text-lg'>รหัสบัตรประชาชน : {idCard || "xxxxx"}</h2>
+              <div className='flex justify-between items-center  md:px-4'>
+                <h2 className='w-1/2 md:3/5 text-sm md:text-lg'>รหัสบัตรประชาชน : {idCard || "-"}</h2>
                 <div className='w-1/3 md:w-2/5 flex gap-4  justify-end'>
 
-                  <Button size="sm" >
+                  <Button size="sm"  >
                     <Link href="/">ออกจากวีดีโอ</Link>
                   </Button>
                 </div>
               </div>
 
 
-              <div className="flex flex-col lg:flex-row gap-4 p-4 ">
+              <div className="flex flex-col lg:flex-row gap-4 mt-4 md:mt-1 md:p-4 ">
                 {/* Player */}
                 <div className="flex-1">
                   {currentVideo && (
@@ -353,21 +360,30 @@ const PageVideoMember = ({ params }: Props) => {
                       )}
                     </>
                   )}
+                  <div className='mt-4'>
+                    <h4 className='text-lg'>รายละเอียด</h4>
+                    <p className='text-sm text-gray-600'>{currentVideo?.detail || "-"}</p>                   
+                  </div>
                 </div>
 
                 {/* List */}
-                <div className="w-full lg:w-1/3 space-y-4">
-                  {videos.map((video, index) => (
-                    <div
-                      key={index}
-                      className={`p-2 border rounded  hover:bg-gray-100 dark:hover:bg-gray-800 ${currentVideo?.name === video.name ? 'bg-gray-200 dark:bg-gray-700' : ''
-                        }`}
-                    >
-                      <p className='text-lg'> {video.name}</p>
-                    </div>
-                  ))}
+                <div className="w-full lg:w-1/3  ">
+                  <div className='overflow-y-scroll h-[450px] space-y-4'>
+                    {videos.map((video, index) => (
+                      <div
+                        key={video.filePath}
+                        className={`p-2 border rounded  hover:bg-gray-100 dark:hover:bg-gray-800 ${currentVideo?.name === video.name ? 'bg-gray-200 dark:bg-gray-700' : ''
+                          }`}
+                      >
+                        <p className='text-base flex gap-2 items-center'> {currentVideo?.name === video.name ? <FaPlay /> : `${index + 1}.` }{" "} {video.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                   <p className='text-sm text-end mt-4'> วีดีโอทั้งหมด {currentVideoIndex} / {videos.length || 0} </p>
                 </div>
+
               </div>
+
 
             </div>
           ) : "เลขบัตรประชาชนนี้ ยังไม่ได้ลงทะเบียน !!"}
