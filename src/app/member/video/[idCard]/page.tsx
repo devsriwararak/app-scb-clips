@@ -1,4 +1,5 @@
 'use client'
+import { formatIdCard } from '@/app/lib/tools'
 import ComponentCard from '@/components/common/ComponentCard'
 import Policy from '@/components/modals/Policy'
 import Button from '@/components/ui/button/Button'
@@ -37,6 +38,7 @@ const PageVideoMember = ({ params }: Props) => {
   const { isOpen, openModal, closeModal } = useModal();
 
   // States
+  const [idCardShow, setidCardShow] = useState<string>("")
   const [currentVideo, setCurrentVideo] = useState<VideoType | null>(null)
   const [currentVideoIndex , setCurrentVideoIndex] = useState<number>(1)
   const [check, setCheck] = useState(false)
@@ -61,7 +63,7 @@ const PageVideoMember = ({ params }: Props) => {
       })
       if (res.status === 200 && res.data.data.length > 0) {
         console.log(res.data);
-
+        setidCardShow(res.data.idCard)
         openModal()
         setVideos(res.data.data)
         setCurrentVideo(res.data.data[0])
@@ -317,7 +319,7 @@ const PageVideoMember = ({ params }: Props) => {
           {check ? (
             <div className='text-2xl'>
               <div className='flex justify-between items-center  md:px-4'>
-                <h2 className='w-1/2 md:3/5 text-sm md:text-lg'>รหัสบัตรประชาชน : {idCard || "-"}</h2>
+                <h2 className='w-1/2 md:3/5 text-sm md:text-lg'>รหัสบัตรประชาชน : {formatIdCard(idCardShow) || "-"}</h2>
                 <div className='w-1/3 md:w-2/5 flex gap-4  justify-end'>
 
                   <Button size="sm"  >

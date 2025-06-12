@@ -19,3 +19,10 @@ export function confirmDelete(callback: () => void) {
       ]
     });
   }
+
+
+// Format เลขบัตรปรนะชาชน
+  export const formatIdCard =(id: string) => {
+    const mainPart = id.slice(0, -3)
+    return `${id[0]}-${id.slice(1,5)}-${id.slice(5,10)}-${mainPart.slice(10,12)}-XX-X`
+  }
