@@ -249,7 +249,6 @@ const PageVideoMember = ({ params }: Props) => {
     const handleVisibilityChange = () => {
       const video = videoRef.current
       if (!video || !currentVideo) return
-
       // ถ้าผู้ใช้กลับมาจากแท็บอื่น (focus tab)
       if (document.visibilityState === 'visible') {
         video.currentTime = 0

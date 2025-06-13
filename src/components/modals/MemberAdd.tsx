@@ -170,7 +170,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
             if (res.status === 200 || res.status === 201) {
                 console.log(res.data);
-                const idCard = res.data.result.idCard
+                const idCard = res.data.idCard
 
                 if (!idCard) return
 
