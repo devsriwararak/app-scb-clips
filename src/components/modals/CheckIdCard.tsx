@@ -157,15 +157,15 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
                                             name="idCard"
                                             control={control}
                                             rules={{
-                                                required: "กรุณากรอกเลขบัตรประชาชน",
+                                                required: "Please input Passport",
                                                 validate: (value) =>
-                                                    value.length === 8 || "Please input Passport No for 13 items",
+                                                    value.length === 9 || "Please input Passport No for 9 items",
                                             }}
                                             render={({ field }) => (
                                                 <Input
                                                     {...field}
                                                     type="text"
-                                                    maxLength={8}
+                                                    maxLength={9}
                                                     placeholder="Enter your Passport No"
 
                                                 />

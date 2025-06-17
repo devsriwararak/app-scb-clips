@@ -71,13 +71,12 @@ const PageQuestion = ({ params }: Props) => {
 
     return (
         <div className="px-8 md:px-20 py-8 flex justify-center items-center h-screen ">
-
             {check && (
                 <QuestionEnd idCard={idCard} />
             )}
 
             {!check && (
-                <div className='bg-white p-6 rounded-lg shadow-lg w-1/2 text-center py-16'>
+                <div className='bg-white p-6 rounded-lg shadow-lg md:w-1/2 text-center py-16'>
                     <h2 className='text-3xl'>{error}</h2>
                     <p className='mt-4'>ไม่สามารถเข้ามาหน้านี้ได้ จนกว่าใบเซอร์จะหมดอายุ</p>
 

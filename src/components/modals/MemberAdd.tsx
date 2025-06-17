@@ -29,11 +29,6 @@ interface SelectType {
     label: string
 }
 
-const options = [
-    { value: "นาย", label: "นาย" },
-    { value: "นางสาว", label: "นางสาว" },
-    { value: "นาง", label: "นาง" },
-];
 
 
 const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }: Props) => {
@@ -66,6 +61,17 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
     const [lecturerData, setLecturerData] = useState<SelectType[]>([])
     const [idCardSwitch, setIdCardSwitch] = useState<number>(defaultValues?.idCardType || 1)
 
+    const options = idCardSwitch === 1 ? [
+        { value: "นาย", label: "นาย" },
+        { value: "นางสาว", label: "นางสาว" },
+        { value: "นาง", label: "นาง" },
+    ] : idCardSwitch === 2 ? [
+        { value: "Mr", label: "Mr" },
+        { value: "Miss", label: "Miss" },
+         { value: "Mrs", label: "Mrs" },
+    ]: [];
+
+
     React.useEffect(() => {
         if (isOpen) {
             if (defaultValues) {
@@ -75,7 +81,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                     fname: defaultValues?.fname || "",
                     lname: defaultValues?.lname || "",
                     idCard: defaultValues?.idCard || "",
-                    idCardType : defaultValues.idCardType || 1,
+                    idCardType: defaultValues.idCardType || 1,
                     phone: defaultValues?.phone || "",
                     email: defaultValues.email || "",
                     companyId: defaultValues?.companyId || 0,
@@ -157,9 +163,6 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
         if (!payload) return toast.error('ส่งข้อมูลไม่ครบ')
 
-        console.log({ payload });
-
-
         try {
             let res
             if (defaultValues) {
@@ -168,21 +171,29 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                 res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/add`, payload)
             }
 
-            if (res.status === 200 || res.status === 201) {
-                console.log(res.data);
-                const idCard = res.data.idCard
+            console.log(res);
 
+            if (res.status === 200) {
+                toast.success('ทำรายการสำเร็จ')
+                const idCard = res.data.idCard
                 if (!idCard) return
 
-                if (fetchData) await fetchData()
-                toast.success('ทำรายการสำเร็จ')
                 if (type === "admin") {
                     closeModal()
                 } else {
                     router.replace(`/member/video/${idCard}`)
                 }
 
+            } else if (res.status === 201) {
+                toast.success('ทำรายการสำเร็จ')
+                if (fetchData) await fetchData()
+                closeModal()
             }
+
+
+
+
+
         } catch (error) {
             console.log(error);
             if (axios.isAxiosError(error) && error.response) {
@@ -215,18 +226,54 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
 
     return (
-        <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[600px] m-4 z-10">
+        <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[600px]  m-4 z-10">
             <div className="no-scrollbar relative w-full max-w-[700px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                 <div className=" pr-14">
-                    <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+                    <h4 className="mb-0 text-2xl font-semibold text-gray-800 dark:text-white/90">
                         ฟอร์มลงทะเบียน
                     </h4>
                 </div>
 
-                <form className="flex flex-col mt-6" onSubmit={handleSubmit(onSubmit, onError)}>
-                    <div className="    pb-3 flex gap-4">
+                <form className="flex flex-col mt-3" onSubmit={handleSubmit(onSubmit, onError)}>
+
+                    <div className='flex flex-row gap-3 items-center md:mt-2 justify-start'>
+                        <label className="text-sm font-medium text-gray-700">เลือกสัญชาติ</label>
+                        <Controller
+                            name="idCardType"
+                            control={control}
+                            render={({ field }) => (
+                                <div className="flex items-center space-x-6 ">
+                                    {/* ไทย */}
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="radio"
+                                            value={1}
+                                            checked={field.value == 1}
+                                            onChange={() => { field.onChange(1); setIdCardSwitch(1) }}
+                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                        />
+                                        <span className="text-gray-700">ไทย</span>
+                                    </label>
+
+                                    {/* ต่างชาติ */}
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="radio"
+                                            value={2}
+                                            checked={field.value == 2}
+                                            onChange={() => { field.onChange(2); setIdCardSwitch(2) }}
+                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                        />
+                                        <span className="text-gray-700">ต่างชาติ</span>
+                                    </label>
+                                </div>
+                            )}
+                        />
+                    </div>
+
+                    <div className="pb-3 flex gap-4 mt-4">
                         <div>
-                            <Label>คำนำหน้าชื่อ</Label>
+                            <Label>คำนำหน้า</Label>
                             <div className="relative">
                                 <Controller
                                     name="titleName"
@@ -311,15 +358,15 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                         name="idCard"
                                         control={control}
                                         rules={{
-                                            required: "กรุณากรอกเลขบัตรประชาชน",
+                                            required: "Please input Passport",
                                             validate: (value) =>
-                                                value.length === 8 || "Please input Passport No for 13 items",
+                                                value.length === 9 || "Please input Passport No for 9 items",
                                         }}
                                         render={({ field }) => (
                                             <Input
                                                 {...field}
                                                 type="text"
-                                                maxLength={8}
+                                                maxLength={9}
                                                 placeholder="Enter your Passport No"
 
                                             />
@@ -327,46 +374,9 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                     />
                                 </>
                             )}
-                            <div className='flex flex-row gap-3 items-center mt-2 justify-start'>
-                    
-                                <div>
-                                    <label className="text-sm font-medium text-gray-700">เลือกสัญชาติ</label>
 
-                                    <Controller
-                                        name="idCardType"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <div className="flex items-center space-x-6 mt-2">
-                                                {/* ไทย */}
-                                                <label className="flex items-center space-x-2">
-                                                    <input
-                                                        type="radio"
-                                                        value={1}
-                                                        checked={field.value == 1}
-                                                        onChange={() => {field.onChange(1); setIdCardSwitch(1)}}
-                                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                                                    />
-                                                    <span className="text-gray-700">ไทย</span>
-                                                </label>
-
-                                                {/* ต่างชาติ */}
-                                                <label className="flex items-center space-x-2">
-                                                    <input
-                                                        type="radio"
-                                                        value={2}
-                                                        checked={field.value == 2}
-                                                        onChange={() => {field.onChange(2); setIdCardSwitch(2)}}
-                                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                                                    />
-                                                    <span className="text-gray-700">ต่างชาติ</span>
-                                                </label>
-                                            </div>
-                                        )}
-                                    />
-                                </div>
-                            </div>
                         </div>
-                        
+
                         <div className='w-full'>
                             <Label>เลือกบริษัท/หจก.</Label>
                             <div className="relative">
@@ -397,7 +407,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                 name="phone"
                                 control={control}
                                 rules={{
-                                    required: "กรุณากรอกเลขบัตรประชาชน",
+                                    required: "กรอกเบอร์โทรศัพท์",
                                     validate: (value) =>
                                         value.length === 10 || "กรุณากรอกเบอร์โทร์ให้ครบ 10 หลัก",
                                 }}
@@ -407,7 +417,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                         type="text"
                                         inputMode="numeric"
                                         maxLength={10}
-                                        placeholder="กรอกเลขบัตรประชาชน"
+                                        placeholder="กรอกเบอร์โทรศัพท์"
                                         onChange={(e) => {
                                             const value = e.target.value.replace(/\D/g, "").slice(0, 10)
                                             field.onChange(value)

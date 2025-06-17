@@ -139,9 +139,9 @@ const QuestionEnd = ({ idCard }: propType) => {
             <div className='bg-white p-6 rounded-lg shadow-lg w-full md:w-2/3'>
                 {!submitted && questions.length > 0 && (
                     <>
-                        <h2 className='text-xl font-bold mb-4'>คำถามทั้งหมด {currentIndex + 1} / {questions.length} </h2>
+                        <h2 className='text-xl font-bold md:mb-4'>คำถามทั้งหมด {currentIndex + 1} / {questions.length} </h2>
                         <p className=' font-medium text-gray-700'>คำถาม</p>
-                        <p className='mb-4 mt-3 text-2xl'>{questions[currentIndex]?.name}</p>
+                        <p className='mb-4 mt-3 text-lg md:text-2xl'>{questions[currentIndex]?.name}</p>
                         <div className='grid grid-cols-2 md:grid-cols-3 gap-4 '>
                             {questions[currentIndex].questionEndList.map(choice => (
                                 <button
@@ -157,13 +157,13 @@ const QuestionEnd = ({ idCard }: propType) => {
                 )}
 
                 {submitted && (
-                    <>     <h2 className='text-xl font-bold mb-4'>ทำข้อสอบเสร็จแล้ว</h2>
+                    <>     <h2 className='text-xl font-bold mb-4'>ส่งข้อสอบ</h2>
 
-                        <div className='px-8 py-8 bg-gray-50 rounded-md border border-gray-100'>
+                        <div className='px-3 md:px-8 py-8 bg-gray-50 rounded-md border border-gray-100'>
 
                             {getResult().correct !== questions.length && (
                                 <div>
-                                    <h3 className='text-4xl font-medium text-red-500'>คุณยังทำข้อสอบไม่ผ่านทุกข้อ !!</h3>
+                                    <h3 className=' text-2xl md:text-4xl font-medium text-red-500'>คุณยังทำข้อสอบไม่ผ่านทุกข้อ !!</h3>
                                     <p className='text-red-500 mt-4'>กรุณาทำใหม่ จนกว่าจะผ่านทุกข้อ</p>
                                     <Button onClick={() => location.reload()} className='mt-4' >เริ่มทำข้อสอบใหม่</Button>
                                 </div>
@@ -184,11 +184,9 @@ const QuestionEnd = ({ idCard }: propType) => {
 
             <div className='bg-white p-6 rounded-lg shadow-lg w-full md:w-1/3'>
                 <div>
-                    <p>บัตรประชาชน : {idCard}</p>
 
                     {submitted && (
                         <>
-
                             {getResult().correct !== questions.length && (
                                 <div>
                                     <h2 className='text-xl font-bold mb-4 mt-4'>ผลลัพธิ์</h2>

@@ -50,7 +50,7 @@ const Page = () => {
 
       <ComponentCard title="" className='flex flex-row gap-4 py-8 px-6 '>
 
-        <div className='flex flex-col md:flex-row gap-4 w-[800px]'>
+        <div className='flex flex-col md:flex-row gap-4 md:w-[800px]'>
           <ComponentCard title="" className='w-full hover:bg-gray-100 cursor-pointer'   >
             <div className='flex flex-col justify-center items-center' onClick={() => handleAdd("register")} >
               <FiUserPlus size={100} className='' />

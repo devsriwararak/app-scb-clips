@@ -1,6 +1,7 @@
 'use client'
 import { formatIdCard } from '@/app/lib/tools'
 import ComponentCard from '@/components/common/ComponentCard'
+import AnswerAccordion from '@/components/member/AnswerAccordion'
 import Policy from '@/components/modals/Policy'
 import Button from '@/components/ui/button/Button'
 import { useModal } from '@/hooks/useModal'
@@ -9,7 +10,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { use, useEffect, useRef, useState } from 'react'
 import { FaPlay } from "react-icons/fa6";
-// import { FcCancel, FcCheckmark } from "react-icons/fc";
+import { RiFullscreenFill } from "react-icons/ri";
+
 
 
 
@@ -40,7 +42,7 @@ const PageVideoMember = ({ params }: Props) => {
   // States
   const [idCardShow, setidCardShow] = useState<string>("")
   const [currentVideo, setCurrentVideo] = useState<VideoType | null>(null)
-  const [currentVideoIndex , setCurrentVideoIndex] = useState<number>(1)
+  const [currentVideoIndex, setCurrentVideoIndex] = useState<number>(1)
   const [check, setCheck] = useState(false)
   const [videos, setVideos] = useState<VideoType[]>([])
   const [question, setQuestion] = useState<Question | null>(null)
@@ -269,6 +271,53 @@ const PageVideoMember = ({ params }: Props) => {
     }
   }, [currentVideo])
 
+  // ป้องกันการใช้คีย์ควบคุม (spacebar, arrow keys)
+  useEffect(() => {
+    const preventKeys = (e: KeyboardEvent) => {
+      const blocked = [' ', 'ArrowLeft', 'ArrowRight']
+      if (blocked.includes(e.key)) {
+        e.preventDefault()
+      }
+    }
+
+    window.addEventListener('keydown', preventKeys)
+    return () => window.removeEventListener('keydown', preventKeys)
+  }, [])
+
+
+  // const handleFullscreen = () => {
+  //   if (videoRef.current) {
+  //     const video = videoRef.current
+
+  //     if (video.requestFullscreen) {
+  //       video.requestFullscreen() // ← ต้องมีวงเล็บ!
+  //     } else if ((video as any).webkitRequestFullscreen) {
+  //       (video as any).webkitRequestFullscreen()
+  //     } else if ((video as any).mozRequestFullScreen) {
+  //       (video as any).mozRequestFullScreen()
+  //     } else if ((video as any).msRequestFullscreen) {
+  //       (video as any).msRequestFullscreen()
+  //     }
+  //   }
+  // }
+
+
+  const handleFullscreen = () => {
+    if (videoRef.current) {
+      const video = videoRef.current
+
+      if (video.requestFullscreen) {
+        video.requestFullscreen() // ← ต้องมีวงเล็บ!
+      } else if ((video as HTMLVideoElement & {webkitRequestFullscreen?: ()=> void}).webkitRequestFullscreen) {
+        (video as HTMLVideoElement &{webkitRequestFullscreen?: ()=> void}).webkitRequestFullscreen!()
+      } else if ((video as HTMLVideoElement & {mozRequestFullScreen?: ()=> void}).mozRequestFullScreen) {
+        (video as HTMLVideoElement &{webkitRequestFullscreen?: ()=> void}).webkitRequestFullscreen!()
+      } else if ((video as HTMLVideoElement & {msRequestFullscreen?: ()=> void}).msRequestFullscreen) {
+        (video as HTMLVideoElement &{webkitRequestFullscreen?: ()=> void}).webkitRequestFullscreen!()
+      }
+    }
+  }
+  
   if (!idCard) return <p>กำลังโหลด...</p>
 
 
@@ -288,8 +337,8 @@ const PageVideoMember = ({ params }: Props) => {
         )}
 
         {showQuestionPopup && question && (
-          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
-            <div className="bg-white p-6 w-1/2 rounded-lg shadow-md ">
+          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4 md:px-0">
+            <div className="bg-white p-6 w-full md:w-1/2 rounded-lg shadow-md ">
               <h3 className="text-xl font-semibold mb-4">คำถามจากวิดีโอ</h3>
               <p>{question?.name || 'กำลังโหลดคำถาม...'}</p>
 
@@ -333,10 +382,13 @@ const PageVideoMember = ({ params }: Props) => {
                 <div className="flex-1">
                   {currentVideo && (
                     <>
+
+
+                      
                       <video
                         ref={videoRef}
                         src={`${process.env.NEXT_PUBLIC_API_URL}${currentVideo.filePath}`}
-                        muted
+                        // muted
                         controls={false}
                         autoPlay
                         controlsList="nodownload nofullscreen noremoteplayback"
@@ -344,7 +396,7 @@ const PageVideoMember = ({ params }: Props) => {
                         preload="metadata"
                         onContextMenu={e => e.preventDefault()}
                         onEnded={handleVideoEnded}
-                        className="w-full h-[400px] bg-black rounded"
+                        className="w-full h-[400px] bg-black rounded pointer-events-none select-none"
                         onTimeUpdate={() => {
                           if (videoRef.current) {
                             handleTimeUpdate(videoRef.current)
@@ -352,18 +404,53 @@ const PageVideoMember = ({ params }: Props) => {
                         }}
                       />
 
-                      {answerResults.length > 0 && (
+                      {/* <video
+                        ref={videoRef}
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${currentVideo.filePath}`}
+                        autoPlay
+                        playsInline
+                        preload="metadata"
+                        controls={false}
+                        onContextMenu={(e) => e.preventDefault()}
+                        className="w-full h-[400px] bg-black rounded pointer-events-none select-none"
+                      /> */}
+
+
+                      {/* {answerResults.length > 0 && (
                         <div className="my-4 p-4 bg-gray-100 rounded text-sm space-y-1">
                           {answerResults.map((msg, index) => (
                             <div key={index}>{msg}</div>
                           ))}
                         </div>
-                      )}
+                      )} 
+          
+                       
+                       */}
+
+                      <div className='flex flex-row gap-4 mt-4 items-center'>
+                        {answerResults.length > 0 && (<div>
+                          <AnswerAccordion answerResults={answerResults} />
+                        </div>)}
+
+                        <div>
+                          <button
+                            onClick={handleFullscreen}
+                            className=" bottom-4 right-4 border border-gray-400 text-gray-500 hover:bg-gray-200 px-3 py-1 text-sm rounded hover:bg-opacity-100 flex gap-2 items-center justify-center"
+                          >
+                            <RiFullscreenFill />เต็มจอ
+                          </button>
+                        </div>
+
+                      </div>
+
+
+
+
                     </>
                   )}
                   <div className='mt-4'>
                     <h4 className='text-lg'>รายละเอียด</h4>
-                    <p className='text-sm text-gray-600'>{currentVideo?.detail || "-"}</p>                   
+                    <p className='text-sm text-gray-600'>{currentVideo?.detail || "-"}</p>
                   </div>
                 </div>
 
@@ -376,11 +463,11 @@ const PageVideoMember = ({ params }: Props) => {
                         className={`p-2 border rounded  hover:bg-gray-100 dark:hover:bg-gray-800 ${currentVideo?.name === video.name ? 'bg-gray-200 dark:bg-gray-700' : ''
                           }`}
                       >
-                        <p className='text-base flex gap-2 items-center'> {currentVideo?.name === video.name ? <FaPlay /> : `${index + 1}.` }{" "} {video.name}</p>
+                        <p className='text-base flex gap-2 items-center'> {currentVideo?.name === video.name ? <FaPlay /> : `${index + 1}.`}{" "} {video.name}</p>
                       </div>
                     ))}
                   </div>
-                   <p className='text-sm text-end mt-4'> วีดีโอทั้งหมด {currentVideoIndex} / {videos.length || 0} </p>
+                  <p className='text-sm text-end mt-4'> วีดีโอทั้งหมด {currentVideoIndex} / {videos.length || 0} </p>
                 </div>
 
               </div>
