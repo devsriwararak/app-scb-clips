@@ -28,11 +28,12 @@ interface CompanyTableProps {
     handleAdd: (type: "create" | "edit" | "view", item?: MemberDataType) => void
     currentPage: number
     setSelected: React.Dispatch<React.SetStateAction<MemberDataType | null>>
+    handleAdd2Year : (id:number)=> void
 
 
 }
 
-export default function MemberTable({ data, loading, handleDelete, handleAdd, currentPage }: CompanyTableProps) {
+export default function MemberTable({ data, loading, handleDelete, handleAdd, currentPage, handleAdd2Year }: CompanyTableProps) {
 
     // States
     const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
@@ -129,7 +130,7 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
 
                             </TableRow>
                         </TableHeader>
-                  
+
 
                         {/* Table Body */}
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
@@ -193,6 +194,13 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                                 </DropdownItem>
 
                                                 <hr />
+                                                <DropdownItem
+                                                    onItemClick={() => { closeDropdown(); handleAdd2Year(order.id) }}
+                                                    className="  bg-red-600 text-white flex gap-2 items-center w-full font-normal text-left  rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                                                >
+                                                    <TrashBinIcon />   ทำให้หมดอายุ
+                                                </DropdownItem>
+
                                                 <DropdownItem
                                                     onItemClick={() => { closeDropdown(); handleDelete(order.id) }}
                                                     className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"

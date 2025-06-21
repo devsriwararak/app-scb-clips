@@ -134,6 +134,23 @@ const PageMemberAdmin = () => {
         })
     }
 
+        const handleAdd2Year = async (id: number) => {
+        confirmDelete(async () => {
+            try {
+                const res = await api.post(`/api/member/certificate/end`, {id})
+
+                if (res.status === 200) {
+                    toast.success('ทำรายการสำเร็จ')
+                    await fetchData()
+                }
+
+            } catch (error) {
+                console.log(error);
+
+            }
+        })
+    }
+
     return (
         <div className="">
 
@@ -200,6 +217,7 @@ const PageMemberAdmin = () => {
                             handleAdd={handleAdd}
                             currentPage={page}
                             setSelected={setSelected}
+                            handleAdd2Year={handleAdd2Year}
 
                         />
 
