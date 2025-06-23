@@ -3,6 +3,7 @@ import Button from '@/components/ui/button/Button'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { FaBan, FaRegRectangleList, FaUpload } from 'react-icons/fa6'
 
 interface propType {
     idCard: string
@@ -104,7 +105,7 @@ const QuestionEnd = ({ idCard }: propType) => {
         return false
     }
 
-        const sendEmail = async () => {
+    const sendEmail = async () => {
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/certificate/send`, {
                 idCard
@@ -135,8 +136,8 @@ const QuestionEnd = ({ idCard }: propType) => {
     }, [submitted])
 
     return (
-        < div className='flex flex-col md:flex-row gap-4'>
-            <div className='bg-white p-6 rounded-lg shadow-lg w-full md:w-2/3'>
+        < div className='flex flex-col md:flex-row gap-4 w-full'>
+            <div className='bg-white p-6 rounded-lg shadow-lg w-full md:w-5/6'>
                 {!submitted && questions.length > 0 && (
                     <>
                         <h2 className='text-xl font-bold md:mb-4'>คำถามทั้งหมด {currentIndex + 1} / {questions.length} </h2>
@@ -157,13 +158,14 @@ const QuestionEnd = ({ idCard }: propType) => {
                 )}
 
                 {submitted && (
-                    <>     <h2 className='text-xl font-bold mb-4'>ส่งข้อสอบ</h2>
+                    <>   
+                    <div className='flex gap-2 items-center mb-4'> <FaUpload /> <h2 className='text-xl font-bold '>ส่งข้อสอบ</h2></div>
 
                         <div className='px-3 md:px-8 py-8 bg-gray-50 rounded-md border border-gray-100'>
 
                             {getResult().correct !== questions.length && (
                                 <div>
-                                    <h3 className=' text-2xl md:text-4xl font-medium text-red-500'>คุณยังทำข้อสอบไม่ผ่านทุกข้อ !!</h3>
+                                    <div className='flex gap-2 items-center'><FaBan color='red' size={35} /><h3 className=' text-2xl md:text-4xl font-medium text-red-500'>  ทำข้อสอบไม่ผ่าน </h3></div>
                                     <p className='text-red-500 mt-4'>กรุณาทำใหม่ จนกว่าจะผ่านทุกข้อ</p>
                                     <Button onClick={() => location.reload()} className='mt-4' >เริ่มทำข้อสอบใหม่</Button>
                                 </div>
@@ -182,19 +184,17 @@ const QuestionEnd = ({ idCard }: propType) => {
                 )}
             </div>
 
-            <div className='bg-white p-6 rounded-lg shadow-lg w-full md:w-1/3'>
+            <div className='bg-white p-6 rounded-lg shadow-lg w-full md:w-1/6'>
                 <div>
-
+                    <div className='flex gap-2 items-center mb-4 '> <FaRegRectangleList /> <h2 className='text-xl font-bold '>ผลลัพธิ์</h2></div>
                     {submitted && (
                         <>
                             {getResult().correct !== questions.length && (
                                 <div>
-                                    <h2 className='text-xl font-bold mb-4 mt-4'>ผลลัพธิ์</h2>
-                                    <div>
-                                        <h2 className='text-xl font-bold mb-4'>ผลลัพธ์ของคุณ</h2>
+                                    <div className='flex flex-col gap-2'>
                                         <p>คำถามทั้งหมด: {getResult().total}</p>
-                                        <p>ตอบถูก: {getResult().correct} ข้อ</p>
-                                        <p>ตอบผิด: {getResult().wrong} ข้อ</p>
+                                        <p>ตอบถูก {getResult().correct} ข้อ</p>
+                                        <p>ตอบผิด {getResult().wrong} ข้อ</p>
                                     </div>
                                 </div>
                             )}

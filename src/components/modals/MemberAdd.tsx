@@ -190,10 +190,6 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                 closeModal()
             }
 
-
-
-
-
         } catch (error) {
             console.log(error);
             if (axios.isAxiosError(error) && error.response) {
@@ -217,7 +213,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                 case "companyId": return "บริษัท";
                 case "locationId": return "สถานที่อบรม";
                 case "lecturerId": return "วิทยากร";
-                case "dateOfTraining": return "วันที่เข้าอบรม";
+                // case "dateOfTraining": return "วันที่เข้าอบรม";
                 default: return key;
             }
         });
@@ -432,7 +428,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                 <Controller
                                     name="dateOfTraining"
                                     control={control}
-                                    rules={{ required: "กรุณาเลือกวันที่อบรม" }}
+                                    // rules={{ required: "กรุณาเลือกวันที่อบรม" }}
                                     render={({ field }) => (
                                         <DatePicker
                                             id="dateOfTraining"
@@ -440,7 +436,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                             placeholder="เลือกวันที่"
                                             defaultDate={field.value}
                                             onChange={(dates: Date[]) => {
-                                                field.onChange(dates?.[0] || null); // ✅ เก็บวันที่เดียว
+                                                field.onChange(dates?.[0] || null); 
                                             }}
                                         />
                                     )}

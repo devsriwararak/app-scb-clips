@@ -108,7 +108,6 @@ const PageLocation = () => {
         confirmDelete(async () => {
             try {
                 const res = await api.delete(`/api/location/${id}`)
-                
                 if (res.status === 200) {
                     toast.success('ทำรายการสำเร็จ')
                     await fetchData()
@@ -116,6 +115,11 @@ const PageLocation = () => {
 
             } catch (error) {
                 console.log(error);
+               if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.message || 'เกิดข้อผิดพลาดบางอย่าง')
+            } else {
+                toast.error('เกิดข้อผิดพลาดที่ไม่รู้จัก')
+            }
 
             }
         })

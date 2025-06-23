@@ -21,6 +21,8 @@ interface Props {
 }
 
 const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
+    console.log(type);
+    
 
     // Systems
     const { control, handleSubmit } = useForm<MemberDataType>({ defaultValues: { idCard: "", idCardType: 1, dateOfTraining: "" }, })
@@ -46,21 +48,19 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
                 console.log(res.data);
                 const idCard = res.data.idCard
                 const dateOfTraining = res.data.dateOfTraining
-                let status = 0
+                const location = res.data.location
 
                 if (!idCard) return
-                if (type === "online") {
-                    status = 0
-                } else {
-                    status = 1
-                }
+              
 
                 if (dateOfTraining) {
-                    if (status === 0) {
+                    if (location === "Online") {
                         router.replace(`/member/video/${idCard}`)
-                    } else if (status === 1) {
-                        sessionStorage.setItem("type", type)
+                    } else if (location === "Onsite") {
+                        sessionStorage.setItem("type", location)
                         router.replace(`/member/questions/${idCard}`)
+                    }else {
+                        toast.error(`เข้าผิดลิ้งคื สถานะ คือ ${location} `)
                     }
                 } else {
                     toast.error('เกิดข้อผิดพลาด')
@@ -93,8 +93,8 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
     const handleAddDateOfTraining = async () => {
         try {
             if (!idCard) return toast.error(`ไม่พบรหัสบัตรประชาชน`)
-                console.log(idCardSwitch);
-                
+            console.log(idCardSwitch);
+
             const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/member/user/update/${idCard}`, { dateOfTraining })
             if (res.status === 200) {
                 await onSubmit({ idCard: res.data.idCard, idCardType: idCardSwitch })
@@ -112,7 +112,7 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
             <div className="no-scrollbar relative w-full max-w-[700px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                 <div className=" pr-14">
                     <h4 className="mb-2 text-xl font-semibold text-gray-800 dark:text-white/90">
-                        ระบบตรวจสอบสิทธิ์ {type}
+                        ระบบตรวจสอบสิทธิ์ 
                     </h4>
 
                     <div className='mt-4'>
