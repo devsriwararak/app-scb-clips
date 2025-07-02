@@ -181,14 +181,20 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                                 </DropdownItem>
                                                 <hr />
                                                 <DropdownItem
-                                                    className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                                    onClick={() => handleViewCertificate(order.idCard)}
+                                                    className={`flex gap-2 items-center w-full font-normal ${!order.dateEndCertificate && "cursor-not-allowed"} text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300`}
+                                                    onClick={() => {
+                                                        if(!order.dateEndCertificate) toast.error('กรุณาอบรมก่อน !')
+                                                        if(order.dateEndCertificate) handleViewCertificate(order.idCard)
+                                                    }}
                                                 >
                                                     <BoltIcon />   ดูใบเซอร์
                                                 </DropdownItem>
                                                 <DropdownItem
-                                                    className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                                    onClick={() => handleSendCertificate(order.idCard)}
+                                                    className={`flex gap-2 items-center w-full font-normal ${!order.dateEndCertificate && "cursor-not-allowed"} text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300`}
+                                                    onClick={() => {
+                                                        if(!order.dateEndCertificate) toast.error('กรุณาอบรมก่อน !')
+                                                        if(order.dateEndCertificate) handleSendCertificate(order.idCard)
+                                                    }}
                                                 >
                                                     <MailIcon />   ส่งอีเมล์
                                                 </DropdownItem>

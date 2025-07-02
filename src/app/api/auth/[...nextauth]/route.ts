@@ -65,7 +65,7 @@ const handler = NextAuth({
     },
     session: {
         strategy: "jwt",
-        maxAge:  60 * 30, // 3 นาที
+        maxAge:  60 * 50, // 5 นาที
         updateAge: 5 * 60, // (optional) ทุกๆ 5 นาทีจะต่ออายุ session ให้อัตโนมัติ
     },
     callbacks: {
