@@ -18,6 +18,7 @@ import api from "@/app/lib/axiosInstance";
 import { toast } from "react-toastify";
 import moment from 'moment'
 import 'moment/locale/th'
+import Switch from "../form/switch/Switch";
 moment.locale('th')
 
 
@@ -28,12 +29,12 @@ interface CompanyTableProps {
     handleAdd: (type: "create" | "edit" | "view", item?: MemberDataType) => void
     currentPage: number
     setSelected: React.Dispatch<React.SetStateAction<MemberDataType | null>>
-    handleAdd2Year : (id:number)=> void
-
+    handleAdd2Year: (id: number) => void
+    handleSwitchChange: (check: boolean, id: number) => void
 
 }
 
-export default function MemberTable({ data, loading, handleDelete, handleAdd, currentPage, handleAdd2Year }: CompanyTableProps) {
+export default function MemberTable({ data, loading, handleDelete, handleAdd, currentPage, handleAdd2Year, handleSwitchChange }: CompanyTableProps) {
 
     // States
     const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
@@ -80,6 +81,8 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
         }
     }
 
+
+
     if (loading) return <p className="p-4">Loading...</p>;
 
     return (
@@ -125,6 +128,12 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                     isHeader
                                     className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
                                 >
+                                    อนุมัติ
+                                </TableCell>
+                                <TableCell
+                                    isHeader
+                                    className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+                                >
                                     Auctions
                                 </TableCell>
 
@@ -152,6 +161,14 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                     </TableCell>
                                     <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                                         {order.dateEndCertificate ? (moment(order.dateEndCertificate).format('D MMMM YYYY')) : "ยังไม่อบรม"}
+                                    </TableCell>
+                                    <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+
+                                        <Switch
+                                            label=""
+                                            defaultChecked={order.verify == 1 ? true : false}
+                                            onChange={(checked) => handleSwitchChange(checked, order.id)} // Cannot find name 'checked'.
+                                        />
                                     </TableCell>
 
                                     <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
@@ -183,8 +200,8 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                                 <DropdownItem
                                                     className={`flex gap-2 items-center w-full font-normal ${!order.dateEndCertificate && "cursor-not-allowed"} text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300`}
                                                     onClick={() => {
-                                                        if(!order.dateEndCertificate) toast.error('กรุณาอบรมก่อน !')
-                                                        if(order.dateEndCertificate) handleViewCertificate(order.idCard)
+                                                        if (!order.dateEndCertificate) toast.error('กรุณาอบรมก่อน !')
+                                                        if (order.dateEndCertificate) handleViewCertificate(order.idCard)
                                                     }}
                                                 >
                                                     <BoltIcon />   ดูใบเซอร์
@@ -192,8 +209,8 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                                 <DropdownItem
                                                     className={`flex gap-2 items-center w-full font-normal ${!order.dateEndCertificate && "cursor-not-allowed"} text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300`}
                                                     onClick={() => {
-                                                        if(!order.dateEndCertificate) toast.error('กรุณาอบรมก่อน !')
-                                                        if(order.dateEndCertificate) handleSendCertificate(order.idCard)
+                                                        if (!order.dateEndCertificate) toast.error('กรุณาอบรมก่อน !')
+                                                        if (order.dateEndCertificate) handleSendCertificate(order.idCard)
                                                     }}
                                                 >
                                                     <MailIcon />   ส่งอีเมล์

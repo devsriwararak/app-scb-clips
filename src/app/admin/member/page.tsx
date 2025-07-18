@@ -23,9 +23,9 @@ export interface MemberDataType {
     fname: string
     lname: string
     idCard: string
-    idCardType : number
+    idCardType: number
     phone: string
-    email :string
+    email: string
     companyId: number
     locationId: number
     lecturerId: number
@@ -35,6 +35,7 @@ export interface MemberDataType {
     location: { name: string }
     company: { name: string }
     lecturer: { name: string }
+    verify: number
 
 }
 
@@ -134,10 +135,10 @@ const PageMemberAdmin = () => {
         })
     }
 
-        const handleAdd2Year = async (id: number) => {
+    const handleAdd2Year = async (id: number) => {
         confirmDelete(async () => {
             try {
-                const res = await api.post(`/api/member/certificate/end`, {id})
+                const res = await api.post(`/api/member/certificate/end`, { id })
 
                 if (res.status === 200) {
                     toast.success('ทำรายการสำเร็จ')
@@ -150,6 +151,23 @@ const PageMemberAdmin = () => {
             }
         })
     }
+
+    const handleSwitchChange = async(checked: boolean, id:number) => {
+        const newChecked = checked === true ? 1 : 0
+        console.log("Switch is now:", newChecked);
+        try {
+            //updateVerify
+            const res = await api.post(`/api/member/updateVerify`, { id : id, checked : newChecked })
+            if(res.status === 201){
+                toast.success('ทำรายการสำเร็จ')
+                await fetchData()
+            }
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    };
 
     return (
         <div className="">
@@ -218,6 +236,7 @@ const PageMemberAdmin = () => {
                             currentPage={page}
                             setSelected={setSelected}
                             handleAdd2Year={handleAdd2Year}
+                            handleSwitchChange={handleSwitchChange}
 
                         />
 

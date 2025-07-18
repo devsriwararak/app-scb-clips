@@ -316,6 +316,17 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
                             />
                         </div>
+
+                        <div className='w-full'>
+                            <Label>แนบไฟล์</Label>
+                            <Input
+                                // {...register("", { required: true })}
+                                disabled
+                                type="file"
+                                placeholder='กรอกนามสกุล'
+
+                            />
+                        </div>
                     </div>
 
                     <div className="   pb-3 flex gap-4 mt-2">

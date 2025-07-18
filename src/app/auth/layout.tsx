@@ -28,17 +28,22 @@ export default function AuthLayout({
           </div> */}
           <div className="w-full lg:w-1/2 h-full bg-gray-200 hidden lg:grid relative ">
 
+            <div className="relative items-center justify-center  flex z-1">
+              <GridShape />
+              <div className="flex flex-col jus items-center ">
 
-            <div className="flex flex-col items-start px-16 py-32   ">
-              <Image
-                width={200}
-                height={200}
-                src="/images/logo/logo_scgp.png"
-                alt="grid"
-                className=" "
-              />
-              <p className="text-2xl mt-4">บริษัท ฟินิคซ พัลพ แอนด์ เพเพอร์ จำกัด (มหาชน) </p>
-              <p className="text-2xl mt-2"> ระบบลงทะเบียนเข้าอบรม ออนไลน์  </p>
+                <p className="text-center text-4xl text-white dark:text-white/60">
+                  <Image
+                    width={200}
+                    height={200}
+                    src="/images/logo/logo_scgp.png"
+                    alt="grid"
+                    className=" "
+                  />
+                </p>
+                <p className="text-2xl mt-4">บริษัท ฟินิคซ พัลพ แอนด์ เพเพอร์ จำกัด (มหาชน) </p>
+                <p className="text-2xl mt-2"> ระบบลงทะเบียนเข้าอบรม ออนไลน์  </p>
+              </div>
             </div>
 
             <div className="flex justify-end items-end">
@@ -50,6 +55,30 @@ export default function AuthLayout({
                 className=" absolute"
               />
             </div>
+
+
+            {/* <div className="flex flex-col items-start px-16 py-32   ">
+              <Image
+                width={200}
+                height={200}
+                src="/images/logo/logo_scgp.png"
+                alt="grid"
+                className=" "
+              />
+              <p className="text-2xl mt-4">บริษัท ฟินิคซ พัลพ แอนด์ เพเพอร์ จำกัด (มหาชน) </p>
+              <p className="text-2xl mt-2"> ระบบลงทะเบียนเข้าอบรม ออนไลน์  </p>
+            </div>
+            <div className="flex justify-end items-end">
+              <Image
+                width={450}
+                height={450}
+                src="/images/logo/auth.png"
+                alt="grid"
+                className=" absolute"
+              />
+            </div> 
+            
+            */}
 
 
           </div>

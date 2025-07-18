@@ -6,7 +6,7 @@ import Button from "@/components/ui/button/Button";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function SignInForm() {
@@ -36,15 +36,15 @@ export default function SignInForm() {
       if (accessToken) {
         toast.success('เข้าสู่ระบบสำเร็จ')
         await signIn('credentials', {
-         
+
           username: userUsername,
           id: id,
           role: role,
           accessToken: accessToken,
-           redirect: true,
-           callbackUrl: '/admin',
+          redirect: true,
+          callbackUrl: '/admin',
         })
-     
+
       } else {
         setError('Login failed');
       }
@@ -77,6 +77,13 @@ export default function SignInForm() {
             </p>
           </div>
           <div>
+
+            <Button
+              onClick={() => signIn('azure-ad')}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Sign in with Azure AD
+            </Button>
 
             <form onSubmit={handleLogin}>
               <div className="space-y-6">
