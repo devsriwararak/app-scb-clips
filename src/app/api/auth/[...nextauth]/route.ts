@@ -2,11 +2,12 @@
 import NextAuth, { type NextAuthOptions } from "next-auth"
 import AzureADProvider from "next-auth/providers/azure-ad";
 
+
 // ฟังก์ชันสำหรับต่ออายุ Access Token โดยใช้ Refresh Token
 // async function refreshAccessToken(token: any) {
 //   try {
 //     const url = `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/oauth2/v2.0/token`;
-    
+
 //     const response = await fetch(url, {
 //       method: "POST",
 //       headers: {
@@ -58,10 +59,10 @@ import AzureADProvider from "next-auth/providers/azure-ad";
 //         // FIX: Explicitly cast account.expires_in to number to prevent TypeScript error.
 //         token.accessTokenExpires = Date.now() + (account.expires_in as number) * 1000;        
 //         token.refreshToken = account.refresh_token;
-        
+
 //         const isAdmin = profile?.roles?.includes("Admin.All");
 //         token.role = isAdmin ? "ADMIN" : "USER";
-        
+
 //         return token;
 //       }
 
@@ -98,7 +99,7 @@ import AzureADProvider from "next-auth/providers/azure-ad";
 // async function refreshAccessToken(token: any) {
 //   try {
 //     const url = `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/oauth2/v2.0/token`;
-    
+
 //     const response = await fetch(url, {
 //       method: "POST",
 //       headers: {
@@ -155,12 +156,12 @@ import AzureADProvider from "next-auth/providers/azure-ad";
 //         token.accessToken = account.access_token;
 //         token.accessTokenExpires = Date.now() + (account.expires_in as number) * 1000;
 //         token.refreshToken = account.refresh_token;
-        
+
 //         // ตรวจสอบ Role จาก Azure AD profile
 //         // คุณอาจต้องปรับ 'Admin.All' ให้ตรงกับชื่อ Role ที่ตั้งไว้ใน Azure AD
 //         const isAdmin = profile?.roles?.includes("Admin.All");
 //         token.role = isAdmin ? "ADMIN" : "USER";
-        
+
 //         return token;
 //       }
 
@@ -198,7 +199,7 @@ import AzureADProvider from "next-auth/providers/azure-ad";
 
 
 
-const apiScope = process.env.AZURE_API_SCOPE!; 
+const apiScope = process.env.AZURE_API_SCOPE!;
 
 // 2. รวม Scope ทั้งหมดที่จำเป็น
 const scopes = ["openid", "profile", "email", "offline_access", apiScope];
@@ -208,7 +209,7 @@ const scopeString = scopes.join(" ");
 async function refreshAccessToken(token: any) {
   try {
     const url = `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/oauth2/v2.0/token`;
-    
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -255,18 +256,60 @@ export const authOptions: NextAuthOptions = {
           scope: scopeString, // ขอสิทธิ์ทั้งหมดที่กำหนดไว้
         },
       },
+      profile(profile) {
+        return {
+          id : profile.sub,
+           name: profile.name,
+           email: profile.preferred_username, 
+           username: profile.preferred_username,
+        }
+      }
     }),
+    
   ],
   callbacks: {
+
+    async signIn({ user }) {
+      // ส่วนนี้ของคุณถูกต้องแล้ว
+      if (!user.email) {
+        console.log("ไม่พบอีเมล์นี้ในระบบ กรุณาลองใหม่อีกครั้ง !!");
+        return false;
+      }
+
+      try {
+        console.log(`กำลังตรวจสอบอีเมล: ${user.email} กับ API...`);
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/validate-member`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: user.email }),
+        });
+        console.log({signIn : response});
+        if(response.status === 200){
+          return true;
+        }else {
+          return 'https://app-scgp.thaibusinessmate.com/signin?error=EmailNotRegistered';
+        }
+        
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการเรียก API ตรวจสอบ:", error);
+        return false;
+      }
+    },
+
     async jwt({ token, user, account, profile }) {
       if (account && user) {
         token.accessToken = account.access_token;
         token.accessTokenExpires = Date.now() + (account.expires_in as number) * 1000;
         token.refreshToken = account.refresh_token;
-        
+
+        //  console.log('Azure AD Profile on initial sign-in:', profile);
+
         const isAdmin = profile?.roles?.includes("Admin.All"); // ปรับชื่อ Role ตามที่ตั้งค่าใน Azure AD
         token.role = isAdmin ? "ADMIN" : "USER";
-        
+
         return token;
       }
 
