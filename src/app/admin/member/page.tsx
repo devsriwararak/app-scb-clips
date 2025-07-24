@@ -15,6 +15,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import ReactSelect from 'react-select'
 import MemberView from '@/components/modals/MemberView'
+import MemberViewImage from '@/components/modals/MemberViewImage'
 
 
 export interface MemberDataType {
@@ -26,6 +27,7 @@ export interface MemberDataType {
     idCardType: number
     phone: string
     email: string
+    image: string
     companyId: number
     locationId: number
     lecturerId: number
@@ -114,7 +116,10 @@ const PageMemberAdmin = () => {
             setSelected(item)
         } else if (type === "view" && item) {
             setSelected(item)
+        } else if (type === "image" && item) {
+            setSelected(item)
         }
+
         openModal()
     }
 
@@ -152,13 +157,13 @@ const PageMemberAdmin = () => {
         })
     }
 
-    const handleSwitchChange = async(checked: boolean, id:number) => {
+    const handleSwitchChange = async (checked: boolean, id: number) => {
         const newChecked = checked === true ? 1 : 0
         console.log("Switch is now:", newChecked);
         try {
             //updateVerify
-            const res = await api.post(`/api/member/updateVerify`, { id : id, checked : newChecked })
-            if(res.status === 201){
+            const res = await api.post(`/api/member/updateVerify`, { id: id, checked: newChecked })
+            if (res.status === 201) {
                 toast.success('ทำรายการสำเร็จ')
                 await fetchData()
             }
@@ -186,6 +191,14 @@ const PageMemberAdmin = () => {
 
             {isOpen && modalType === "view" && (
                 <MemberView
+                    isOpen={isOpen}
+                    closeModal={closeModal}
+                    defaultValues={selected || undefined}
+                />
+            )}
+
+            {isOpen && modalType === "image" && (
+                <MemberViewImage
                     isOpen={isOpen}
                     closeModal={closeModal}
                     defaultValues={selected || undefined}

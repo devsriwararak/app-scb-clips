@@ -26,7 +26,7 @@ const MemberView = ({ isOpen, closeModal, defaultValues }: Props) => {
     return (
         <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[800px] m-4 z-10">
 
-            <div className="no-scrollbar relative w-full max-w-[800px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+            <div className="no-scrollbar relative w-full max-w-[800px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-8">
                 <div className="  px-8 py-6 ">
                     <h4 className="mb-2 text-xl font-semibold text-gray-800 dark:text-white/90">
                         ข้อมูล ( {defaultValues?.titleName} {" "} {defaultValues?.fname} {" "} {defaultValues?.lname} )

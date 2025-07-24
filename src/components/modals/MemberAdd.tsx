@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import { MemberDataType } from '@/app/admin/member/page'
 import api from '@/app/lib/axiosInstance'
+import { isMobile } from "react-device-detect";
 
 
 interface Props {
@@ -44,6 +45,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
             idCardType: 1,
             phone: "",
             email: "",
+            image: "",
             companyId: 0,
             locationId: 0,
             lecturerId: 0,
@@ -68,8 +70,8 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
     ] : idCardSwitch === 2 ? [
         { value: "Mr", label: "Mr" },
         { value: "Miss", label: "Miss" },
-         { value: "Mrs", label: "Mrs" },
-    ]: [];
+        { value: "Mrs", label: "Mrs" },
+    ] : [];
 
 
     React.useEffect(() => {
@@ -84,6 +86,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                     idCardType: defaultValues.idCardType || 1,
                     phone: defaultValues?.phone || "",
                     email: defaultValues.email || "",
+                    image: defaultValues.image || "",
                     companyId: defaultValues?.companyId || 0,
                     locationId: defaultValues?.locationId || 0,
                     lecturerId: defaultValues?.lecturerId || 0,
@@ -154,21 +157,44 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
 
     const onSubmit = async (data: MemberDataType) => {
-        const payload = {
-            ...data,
-            dateOfTraining: data.dateOfTraining
-                ? new Date(data.dateOfTraining).toISOString()
-                : null
-        };
+        // const payload = {
+        //     ...data,
+        //     dateOfTraining: data.dateOfTraining
+        //         ? new Date(data.dateOfTraining).toISOString()
+        //         : null
+        // };
+        // if (!payload) return toast.error('ส่งข้อมูลไม่ครบ')
+        // console.log(data);
 
-        if (!payload) return toast.error('ส่งข้อมูลไม่ครบ')
+        const formData = new FormData();
+
+        // 2. นำข้อมูลแต่ละ field ยัดลงใน formData
+        formData.append('titleName', data.titleName);
+        formData.append('fname', data.fname);
+        formData.append('lname', data.lname);
+        formData.append('email', data.email);
+        formData.append('phone', data.phone);
+        formData.append('idCard', data.idCard);
+        formData.append('companyId', String(data.companyId));
+        formData.append('locationId', String(data.locationId));
+        formData.append('lecturerId', String(data.lecturerId));
+
+        if (data.dateOfTraining) {
+            formData.append('dateOfTraining', new Date(data.dateOfTraining).toISOString());
+        }
+
+        if (data.image && data.image[0]) {
+            formData.append('image', data.image[0]);
+        }
+
+        if (!data) return toast.error('ส่งข้อมูลไม่ครบ');
 
         try {
             let res
             if (defaultValues) {
-                res = await api.put(`/api/member/${defaultValues.id}`, payload)
+                res = await api.put(`/api/member/${defaultValues.id}`, formData)
             } else {
-                res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/add`, payload)
+                res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/add`, formData)
             }
 
             console.log(res);
@@ -209,6 +235,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                 case "lname": return "นามสกุล";
                 case "idCard": return "เลขบัตรประชาชน";
                 case "email": return "กรอก E-mail";
+                case "image": return "กรุณาแนบรูปภาพหลักฐาน";
                 case "phone": return "เบอร์โทร";
                 case "companyId": return "บริษัท";
                 case "locationId": return "สถานที่อบรม";
@@ -229,6 +256,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                         ฟอร์มลงทะเบียน
                     </h4>
                 </div>
+
 
                 <form className="flex flex-col mt-3" onSubmit={handleSubmit(onSubmit, onError)}>
 
@@ -317,16 +345,36 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                             />
                         </div>
 
-                        <div className='w-full'>
-                            <Label>แนบไฟล์</Label>
-                            <Input
-                                // {...register("", { required: true })}
-                                disabled
-                                type="file"
-                                placeholder='กรอกนามสกุล'
+                        {isMobile ? (
+                            <div className='w-full'>
+                                <>
+                                    <label
+                                        htmlFor="image-upload"
+                                        className="mt-1 flex justify-center w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
+                                    >
+                                        📷 เปิดกล้องเพื่อถ่ายรูป
+                                    </label>
+                                    <input
+                                        id="image-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        capture="environment"
+                                        className="hidden"
+                                        {...register("image", { required: "กรุณาแนบรูปภาพ" })}
+                                    />
+                                </>
+                            </div>
+                        ) : (
+                            <div className='w-full'>
+                                <Label>แนบไฟล์</Label>
+                                <Input
+                                    {...register("image", { required: "กรุณาแนบรูปภาพ" })}
+                                    type="file"
+                                    accept="image/*"
+                                />
+                            </div>
+                        )}
 
-                            />
-                        </div>
                     </div>
 
                     <div className="   pb-3 flex gap-4 mt-2">
@@ -447,7 +495,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                             placeholder="เลือกวันที่"
                                             defaultDate={field.value}
                                             onChange={(dates: Date[]) => {
-                                                field.onChange(dates?.[0] || null); 
+                                                field.onChange(dates?.[0] || null);
                                             }}
                                         />
                                     )}

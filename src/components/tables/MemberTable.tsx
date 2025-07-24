@@ -26,7 +26,7 @@ interface CompanyTableProps {
     data: MemberDataType[];
     loading: boolean;
     handleDelete: (id: number) => void
-    handleAdd: (type: "create" | "edit" | "view", item?: MemberDataType) => void
+    handleAdd: (type: "create" | "edit" | "view" | "image", item?: MemberDataType) => void
     currentPage: number
     setSelected: React.Dispatch<React.SetStateAction<MemberDataType | null>>
     handleAdd2Year: (id: number) => void
@@ -188,6 +188,12 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                                     onClick={() => handleAdd('view', order)}
                                                 >
                                                     <EyeIcon />   ดูข้อมูล
+                                                </DropdownItem>
+                                                <DropdownItem
+                                                    className="flex gap-2 items-center w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                                                    onClick={() => handleAdd('image', order)}
+                                                >
+                                                    <EyeIcon />   รูปที่ส่งมา
                                                 </DropdownItem>
 
                                                 <DropdownItem
