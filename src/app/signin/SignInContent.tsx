@@ -1,16 +1,14 @@
-// app/signin/page.tsx
 'use client'
 
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function SignInPage() {
+export default function SignInContent() {
   const { status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
-
 
   useEffect(() => {
     // ถ้า Login แล้ว ให้ redirect ไปยังหน้า admin
@@ -24,6 +22,18 @@ export default function SignInPage() {
     return <div className="flex justify-center items-center min-h-screen">กำลังตรวจสอบสถานะ...</div>;
   }
 
+  // ฟังก์ชันสำหรับแสดงข้อความ Error ที่เหมาะสม
+  const getErrorMessage = (errorCode: string | null) => {
+    switch (errorCode) {
+      case 'EmailNotRegistered':
+        return 'อีเมลของคุณไม่ได้รับอนุญาตให้เข้าใช้งานในระบบ';
+      case 'AccessDenied':
+        return 'คุณปฏิเสธการเข้าถึง หรือไม่มีสิทธิ์ที่จำเป็น';
+      default:
+        return 'ไม่สามารถเข้าสู่ระบบได้ กรุณาตรวจสอบการตั้งค่าหรือติดต่อผู้ดูแล';
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
       <div className="p-8 bg-white rounded-xl shadow-lg w-full max-w-sm text-center">
@@ -34,7 +44,7 @@ export default function SignInPage() {
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
             <strong className="font-bold">เกิดข้อผิดพลาด: </strong>
-            <span className="block sm:inline">ไม่สามารถเข้าสู่ระบบได้ กรุณาตรวจสอบการตั้งค่าหรือติดต่อผู้ดูแล</span>
+            <span className="block sm:inline">{getErrorMessage(error)}</span>
           </div>
         )}
 

@@ -65,13 +65,15 @@ const PageMemberAdmin = () => {
     const [totalPages, setTotalPages] = useState(1)
     const [totalItems, setTotalItem] = useState(0)
     const [companyData, setCompanyData] = useState<SelectType[]>([])
+    const [filterData, setFilterData] = useState<SelectType[]>([])
     const [selectedCompany, setSelectedCompany] = useState<string | null>(null)
+    const [selectedFilter, setSelectedFilter] = useState<string >("desc")
 
 
     const fetchData = async () => {
         try {
             const res = await api.get(`/api/member/all`, {
-                params: { page, search, companyId: selectedCompany }
+                params: { page, search, companyId: selectedCompany , filter : selectedFilter }
             })
             if (res.status === 200) {
                 console.log(res.data);
@@ -99,11 +101,19 @@ const PageMemberAdmin = () => {
             console.log(error);
         }
     }
+    const fetchDataFilter = async () => {
+        setFilterData([
+            { value: "desc", label: "ใหม่-เก่า" },
+            { value: "asc", label: "เก่า-ใหม่" },
+           
+        ])
+    }
 
     useEffect(() => {
         fetchData()
         fetchDataCompany()
-    }, [search, page, selectedCompany])
+        fetchDataFilter()
+    }, [search, page, selectedCompany , selectedFilter])
 
 
     const handleAdd = async (type: string, item?: MemberDataType) => {
@@ -229,6 +239,19 @@ const PageMemberAdmin = () => {
                                         className='w-1/2'
                                         onChange={(option) => {
                                             setSelectedCompany(option?.value || null)
+                                            setPage(1)
+                                        }}
+                                    />
+                                )}
+
+                                {filterData.length > 0 && (
+                                    <ReactSelect<SelectType>
+                                        options={filterData}
+                                        placeholder="ใหม่-เก่า"
+                                        isClearable={true}
+                                        className='w-1/2'
+                                        onChange={(option) => {
+                                            setSelectedFilter(option?.value || "desc")
                                             setPage(1)
                                         }}
                                     />

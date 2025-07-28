@@ -16,9 +16,9 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     setIsOpen(false);
   }
 
-  const handleLogout = async () => {
-    await signOut({ callbackUrl: '/auth/signin' })
-  }
+  // const handleLogout = async () => {
+  //   await signOut({ callbackUrl: '/auth/signin' })
+  // }
 
   return (
     <div className="relative">

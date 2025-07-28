@@ -63,7 +63,9 @@ const PageVideoMember = ({ params }: Props) => {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/vdo/secure/checkIdCard`, {
         idCard: idCard
       })
-      if (res.status === 200 && res.data.data.length > 0) {
+      console.log({checkIdCard :res});
+      
+      if (res.status === 200 ) {
         console.log(res.data);
         setidCardShow(res.data.idCard)
         openModal()

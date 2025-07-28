@@ -22,26 +22,7 @@ export interface MemberDataType {
     memberId: number;
     oldCompanyId: number;
     newCompany : string
-    member: {
-        id: number;
-        titleName: string;
-        fname: string;
-        lname: string;
-        idCard: string;
-        idCardType : number
-        phone: string;
-        email :string
-        companyId: number;
-        locationId: number;
-        lecturerId: number;
-        createdAt: string;
-        dateOfTraining: string;
-        dateEndCertificate: string;
-        location: { name: string };
-        lecturer: { name: string };
-        company: { name: string };
-    };
-
+    member : MemberDataForViewType
 }
 
 export interface MemberDataForViewType {
@@ -53,6 +34,7 @@ export interface MemberDataForViewType {
     idCardType : number
     phone: string
     email :string
+    image: string
     companyId: number
     locationId: number
     lecturerId: number
@@ -62,6 +44,7 @@ export interface MemberDataForViewType {
     location: { name: string }
     company: { name: string }
     lecturer: { name: string }
+    verify: number
 
 }
 

@@ -122,6 +122,12 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                     isHeader
                                     className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
                                 >
+                                    วันที่อบรม
+                                </TableCell>
+                                <TableCell
+                                    isHeader
+                                    className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+                                >
                                     ใบเซอร์หมดอายุ
                                 </TableCell>
                                 <TableCell
@@ -158,6 +164,10 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                     </TableCell>
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                         {order.company.name}
+                                    </TableCell>
+
+                                    <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                                        {order.dateOfTraining ? (moment(order.dateOfTraining).format('D MMMM YYYY')) : "-"}
                                     </TableCell>
                                     <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                                         {order.dateEndCertificate ? (moment(order.dateEndCertificate).format('D MMMM YYYY')) : "ยังไม่อบรม"}

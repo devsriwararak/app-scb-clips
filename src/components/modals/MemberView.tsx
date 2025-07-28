@@ -21,6 +21,7 @@ const MemberView = ({ isOpen, closeModal, defaultValues }: Props) => {
 
     const tag_p_class_title = "mb-2 text-sm leading-normal text-gray-500 dark:text-gray-400"
     const tag_p_class_detail = "text-sm font-medium text-gray-800 dark:text-white/90"
+    const createdAt =  defaultValues?.createdAt ? (moment(defaultValues.createdAt).format('D MMMM YYYY')) : "-"
 
 
     return (
@@ -29,7 +30,8 @@ const MemberView = ({ isOpen, closeModal, defaultValues }: Props) => {
             <div className="no-scrollbar relative w-full max-w-[800px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-8">
                 <div className="  px-8 py-6 ">
                     <h4 className="mb-2 text-xl font-semibold text-gray-800 dark:text-white/90">
-                        ข้อมูล ( {defaultValues?.titleName} {" "} {defaultValues?.fname} {" "} {defaultValues?.lname} )
+                        ข้อมูล ( {defaultValues?.titleName} {" "} {defaultValues?.fname} {" "} {defaultValues?.lname} ) 
+                        <span className='text-gray-500 bg-yellow-200 ml-3 px-3'> - สร้างวันที่ ({createdAt})</span>
                     </h4>
 
                     <div className='mt-8'>

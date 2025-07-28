@@ -1,5 +1,6 @@
 // app/api/auth/[...nextauth]/route.ts
 import NextAuth, { type NextAuthOptions } from "next-auth"
+import { JWT } from "next-auth/jwt";
 import AzureADProvider from "next-auth/providers/azure-ad";
 
 
@@ -206,7 +207,7 @@ const scopes = ["openid", "profile", "email", "offline_access", apiScope];
 const scopeString = scopes.join(" ");
 
 // ฟังก์ชันสำหรับต่ออายุ Access Token โดยใช้ Refresh Token
-async function refreshAccessToken(token: any) {
+async function refreshAccessToken(token: JWT) : Promise<JWT> {
   try {
     const url = `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/oauth2/v2.0/token`;
 
@@ -220,7 +221,7 @@ async function refreshAccessToken(token: any) {
         client_secret: process.env.AZURE_AD_CLIENT_SECRET!,
         scope: scopeString, // ใช้ scope ที่รวม API ของเราแล้ว
         grant_type: "refresh_token",
-        refresh_token: token.refreshToken,
+        refresh_token: token.refreshToken as string,
       }),
     });
 
@@ -245,7 +246,7 @@ async function refreshAccessToken(token: any) {
   }
 }
 
-export const authOptions: NextAuthOptions = {
+ const authOptions: NextAuthOptions = {
   providers: [
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID!,
@@ -268,7 +269,6 @@ export const authOptions: NextAuthOptions = {
     
   ],
   callbacks: {
-
     async signIn({ user }) {
       // ส่วนนี้ของคุณถูกต้องแล้ว
       if (!user.email) {
@@ -337,4 +337,4 @@ export const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions)
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST }; 

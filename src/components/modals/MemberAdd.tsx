@@ -157,18 +157,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
 
     const onSubmit = async (data: MemberDataType) => {
-        // const payload = {
-        //     ...data,
-        //     dateOfTraining: data.dateOfTraining
-        //         ? new Date(data.dateOfTraining).toISOString()
-        //         : null
-        // };
-        // if (!payload) return toast.error('ส่งข้อมูลไม่ครบ')
-        // console.log(data);
-
         const formData = new FormData();
-
-        // 2. นำข้อมูลแต่ละ field ยัดลงใน formData
         formData.append('titleName', data.titleName);
         formData.append('fname', data.fname);
         formData.append('lname', data.lname);
@@ -185,6 +174,9 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
         if (data.image && data.image[0]) {
             formData.append('image', data.image[0]);
+        }
+        if(defaultValues?.image){
+            formData.append('image', defaultValues?.image);
         }
 
         if (!data) return toast.error('ส่งข้อมูลไม่ครบ');
@@ -256,7 +248,6 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                         ฟอร์มลงทะเบียน
                     </h4>
                 </div>
-
 
                 <form className="flex flex-col mt-3" onSubmit={handleSubmit(onSubmit, onError)}>
 
@@ -360,7 +351,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                         accept="image/*"
                                         capture="environment"
                                         className="hidden"
-                                        {...register("image", { required: "กรุณาแนบรูปภาพ" })}
+                                        {...register("image",  { required: defaultValues?.id ? false : true })}
                                     />
                                 </>
                             </div>
@@ -368,7 +359,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                             <div className='w-full'>
                                 <Label>แนบไฟล์</Label>
                                 <Input
-                                    {...register("image", { required: "กรุณาแนบรูปภาพ" })}
+                                    {...register("image", { required: defaultValues?.id ? false : true })}
                                     type="file"
                                     accept="image/*"
                                 />
@@ -552,7 +543,8 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                             ยกเลิก
                         </Button>
                         <Button size="sm" type="submit" >
-                            ลงทะเบียน
+                            
+                            {!defaultValues?.id ? "ลงทะเบียน" : "อัพเดท"}
                         </Button>
                     </div>
                 </form>

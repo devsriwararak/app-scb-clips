@@ -8,7 +8,6 @@ import { ToastContainer } from 'react-toastify';
 
 import { Prompt } from 'next/font/google'
 import AuthProvider from '@/components/providers/AuthProvider';
-import { SessionProvider } from 'next-auth/react';
 
 
 const prompt = Prompt({

@@ -8,6 +8,7 @@ import { FiUserPlus } from "react-icons/fi";
 import { FiAirplay } from "react-icons/fi";
 import { MemberDataType } from './admin/member/page';
 import CheckIdCard from '@/components/modals/CheckIdCard';
+import Link from 'next/link';
 
 
 const Page = () => {
@@ -35,7 +36,11 @@ const Page = () => {
           width={150}
           height={100}
         />
+        <div className='px-4 bg-blue-600 text-white py-1'>
+          <Link href='/signin'>ปุ่มเข้าสู่ระบบ เฉพาะทดสอบ</Link>
+        </div>
       </div>
+      
 
       <div className='flex justify-center items-center  '>
 

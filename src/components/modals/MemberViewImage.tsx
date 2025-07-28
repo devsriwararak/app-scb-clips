@@ -79,19 +79,16 @@ const MemberViewImage = ({ isOpen, closeModal, defaultValues }: Props) => {
 
     return (
         <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[800px] m-4 z-10">
-
-            <div className="no-scrollbar relative w-full max-w-[800px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-8">
-                
-                {!loading && (<p className='text-center text-lg py-2'>กำลังโหลด ....</p>)}
-                {image && loading ? (
-                    <img src={image!} alt="xxx" />
+            <div className=" relative w-full max-w-[800px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-8 overflow-y-auto max-h-[85vh]">
+                {image  ? (
+                    <img src={image!} alt="xxx" className="w-full h-auto" />
                 ) : (
                    <>
-                    <h3 className='text-center text-xl'>ไม่มีรูปภาพ</h3>
+                    <h3 className='text-center text-xl'>
+                         {!loading ? "กำลังโหลด ...." : "ไม่มีรูปภาพ"}
+                    </h3>
                    </>
                 )}
-
-
             </div>
         </Modal>
     )

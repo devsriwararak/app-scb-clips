@@ -46,7 +46,6 @@
 'use client' // สำคัญมาก!
 
 import { useSession, signOut } from "next-auth/react"
-import Image from 'next/image'
 
 export default function AdminDashboard() {
   const { data: session } = useSession()
