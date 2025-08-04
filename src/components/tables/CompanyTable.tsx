@@ -71,7 +71,7 @@ export default function CompanyTable({ data, loading, handleDelete, handleAdd, c
                                     isHeader
                                     className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
                                 >
-                                    Auctions
+                                    Actions
                                 </TableCell>
 
                             </TableRow>

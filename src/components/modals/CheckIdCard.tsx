@@ -21,8 +21,6 @@ interface Props {
 }
 
 const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
-    console.log(type);
-    
 
     // Systems
     const { control, handleSubmit } = useForm<MemberDataType>({ defaultValues: { idCard: "", idCardType: 1, dateOfTraining: "" }, })
@@ -51,21 +49,41 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
                 const location = res.data.location
 
                 if (!idCard) return
-              
+                // เช็ค login มาจาก type เดียวกัน ไหม
 
-                if (dateOfTraining) {
-                    if (location === "Online") {
-                        router.replace(`/member/video/${idCard}`)
-                    } else if (location === "Onsite") {
-                        sessionStorage.setItem("type", location)
-                        router.replace(`/member/questions/${idCard}`)
-                    }else {
-                        toast.error(`เข้าผิดลิ้งคื สถานะ คือ ${location} `)
-                    }
-                } else {
+                if (type !== location) {
+                    toast.error(`เข้าผิดลิ้งคื สถานะ คือ ${location} `)
+                    return
+                }
+
+                if (!dateOfTraining) {
                     toast.error('เกิดข้อผิดพลาด')
                     setDateOfTrainingStatus(true)
+                    return
                 }
+
+                if (location === "Online") {
+                    router.replace(`/member/video/${idCard}`);
+                } else if (location === "Onsite") {
+                    sessionStorage.setItem("type", location);
+                    router.replace(`/member/questions/${idCard}`);
+                } else {
+                    toast.error(`เข้าผิดลิ้งค์ สถานะคือ ${location}`);
+                }
+
+                // if (dateOfTraining) {
+                //     if (location === "Online") {
+                //         router.replace(`/member/video/${idCard}`)
+                //     } else if (location === "Onsite") {
+                //         sessionStorage.setItem("type", location)
+                //         router.replace(`/member/questions/${idCard}`)
+                //     }else {
+                //         toast.error(`เข้าผิดลิ้งคื สถานะ คือ ${location} `)
+                //     }
+                // } else {
+                //     toast.error('เกิดข้อผิดพลาด')
+                //     setDateOfTrainingStatus(true)
+                // }
 
             }
         } catch (error) {
@@ -112,7 +130,7 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
             <div className="no-scrollbar relative w-full max-w-[700px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                 <div className=" pr-14">
                     <h4 className="mb-2 text-xl font-semibold text-gray-800 dark:text-white/90">
-                        ระบบตรวจสอบสิทธิ์ 
+                        ระบบตรวจสอบสิทธิ์
                     </h4>
 
                     <div className='mt-4'>
@@ -120,28 +138,6 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
 
                             <div className='w-full'>
 
-                                {/* <Controller
-                                    name="idCard"
-                                    control={control}
-                                    rules={{
-                                        required: "กรุณากรอกเลขบัตรประชาชน",
-                                        validate: (value) =>
-                                            value.length === 13 || "กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก",
-                                    }}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            type="text"
-                                            inputMode="numeric"
-                                            maxLength={13}
-                                            placeholder="กรอกเลขบัตรประชาชน"
-                                            onChange={(e) => {
-                                                const value = e.target.value.replace(/\D/g, "").slice(0, 13)
-                                                field.onChange(value)
-                                            }}
-                                        />
-                                    )}
-                                /> */}
 
                                 {idCardSwitch === 1 && !dateOfTrainingStatus && (
                                     <>

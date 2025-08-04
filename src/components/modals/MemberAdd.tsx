@@ -175,7 +175,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
         if (data.image && data.image[0]) {
             formData.append('image', data.image[0]);
         }
-        if(defaultValues?.image){
+        if (defaultValues?.image) {
             formData.append('image', defaultValues?.image);
         }
 
@@ -241,8 +241,8 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
 
 
     return (
-        <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[600px]  m-4 z-10">
-            <div className="no-scrollbar relative w-full max-w-[700px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+        <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[600px]  m-2 z-10">
+            <div className="no-scrollbar relative w-full max-w-[700px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-7">
                 <div className=" pr-14">
                     <h4 className="mb-0 text-2xl font-semibold text-gray-800 dark:text-white/90">
                         ฟอร์มลงทะเบียน
@@ -286,8 +286,8 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                         />
                     </div>
 
-                    <div className="pb-3 flex gap-4 mt-4">
-                        <div>
+                    <div className="pb-1 flex gap-3 mt-4 ">
+                        <div className=' w-full md:w-3/12 '>
                             <Label>คำนำหน้า</Label>
                             <div className="relative">
                                 <Controller
@@ -298,7 +298,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                         <ReactSelect<SelectType>
                                             options={options}
                                             placeholder="เลือก"
-                                            isClearable={true}
+                                            // isClearable={true}
                                             value={options.find(option => option.value == String(field.value))}
                                             onChange={(option) => field.onChange(option?.value)}
                                         />
@@ -306,7 +306,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                 />
                             </div>
                         </div>
-                        <div>
+                        <div className='w-full md:w-5/12'>
                             <Label>ชื่อจริง</Label>
                             <Input
                                 {...register("fname", { required: true })}
@@ -314,7 +314,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                 placeholder='กรอกชื่อ'
                             />
                         </div>
-                        <div>
+                        <div className='w-full md:w-4/12'>
                             <Label>นามสกุล</Label>
                             <Input
                                 {...register("lname", { required: true })}
@@ -331,40 +331,30 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                             <Input
                                 {...register("email", { required: true })}
                                 type="email"
-                                placeholder='กรอกนามสกุล'
+                                placeholder='กรอกอีเมล์'
 
                             />
                         </div>
-
-                        {isMobile ? (
-                            <div className='w-full'>
-                                <>
-                                    <label
-                                        htmlFor="image-upload"
-                                        className="mt-1 flex justify-center w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
-                                    >
-                                        📷 เปิดกล้องเพื่อถ่ายรูป
-                                    </label>
-                                    <input
-                                        id="image-upload"
-                                        type="file"
-                                        accept="image/*"
-                                        capture="environment"
-                                        className="hidden"
-                                        {...register("image",  { required: defaultValues?.id ? false : true })}
-                                    />
-                                </>
-                            </div>
-                        ) : (
-                            <div className='w-full'>
-                                <Label>แนบไฟล์</Label>
-                                <Input
-                                    {...register("image", { required: defaultValues?.id ? false : true })}
-                                    type="file"
-                                    accept="image/*"
+                        <div className='w-full'>
+                            <div>
+                                <Controller
+                                    name="dateOfTraining"
+                                    control={control}
+                                    // rules={{ required: "กรุณาเลือกวันที่อบรม" }}
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            id="dateOfTraining"
+                                            label="เลือกวันที่เข้าอบรม"
+                                            placeholder="เลือกวันที่"
+                                            defaultDate={field.value}
+                                            onChange={(dates: Date[]) => {
+                                                field.onChange(dates?.[0] || null);
+                                            }}
+                                        />
+                                    )}
                                 />
                             </div>
-                        )}
+                        </div>
 
                     </div>
 
@@ -434,7 +424,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                         <ReactSelect<SelectType>
                                             options={companyData}
                                             placeholder="เลือกบริษัท"
-                                            isClearable={true}
+                                            // isClearable={true}
                                             value={companyData.find(option => option.value === String(field.value))}
                                             onChange={(option) => field.onChange(option?.value)}
                                         />
@@ -473,27 +463,35 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                             />
                         </div>
 
-                        <div className='w-full'>
-                            <div>
-                                <Controller
-                                    name="dateOfTraining"
-                                    control={control}
-                                    // rules={{ required: "กรุณาเลือกวันที่อบรม" }}
-                                    render={({ field }) => (
-                                        <DatePicker
-                                            id="dateOfTraining"
-                                            label="เลือกวันที่เข้าอบรม"
-                                            placeholder="เลือกวันที่"
-                                            defaultDate={field.value}
-                                            onChange={(dates: Date[]) => {
-                                                field.onChange(dates?.[0] || null);
-                                            }}
-                                        />
-                                    )}
-                                />
-
+                        {isMobile ? (
+                            <div className='w-full'>
+                                <>
+                                    <label
+                                        htmlFor="image-upload"
+                                        className="mt-1 flex justify-center w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
+                                    >
+                                        📷 เปิดกล้องเพื่อถ่ายรูป
+                                    </label>
+                                    <input
+                                        id="image-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        capture="environment"
+                                        className="hidden"
+                                        {...register("image", { required: defaultValues?.id ? false : true })}
+                                    />
+                                </>
                             </div>
-                        </div>
+                        ) : (
+                            <div className='w-full'>
+                                <Label>แนบเอกสารอบรม 6 ชั่วโมง</Label>
+                                <Input
+                                    {...register("image", { required: defaultValues?.id ? false : true })}
+                                    type="file"
+                                    accept="image/*"
+                                />
+                            </div>
+                        )}
                     </div>
 
                     <div className="  pb-3 flex gap-4 mt-2">
@@ -508,7 +506,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                         <ReactSelect<SelectType>
                                             options={locationData}
                                             placeholder="เลือกสถานที่อบรม"
-                                            isClearable={true}
+                                            // isClearable={true}
                                             value={locationData.find(option => option.value === String(field.value))}
                                             onChange={(option) => field.onChange(option?.value)}
                                         />
@@ -527,7 +525,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                                         <ReactSelect<SelectType>
                                             options={lecturerData}
                                             placeholder="เลือกวิทยากร"
-                                            isClearable={true}
+                                            // isClearable={true}
                                             value={lecturerData.find(option => option.value === String(field.value))}
                                             onChange={(option) => field.onChange(option?.value)}
                                         />
@@ -543,7 +541,7 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                             ยกเลิก
                         </Button>
                         <Button size="sm" type="submit" >
-                            
+
                             {!defaultValues?.id ? "ลงทะเบียน" : "อัพเดท"}
                         </Button>
                     </div>

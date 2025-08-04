@@ -30,7 +30,7 @@ const navItems: NavItem[] = [
       { icon: <GoCircle size={8} />, name: "ข้อมูลบริษัท", path: "/admin/company", pro: false },
       { icon: <GoCircle size={8} />, name: "ข้อมูลสถานที่อบรม", path: "/admin/location", pro: false },
       { icon: <GoCircle size={8} />, name: "ข้อมูลวิทยากร", path: "/admin/lecturer", pro: false },
-      { icon: <GoCircle size={8} />, name: "ข้อมูลวีดีโอ", path: "/admin/video", pro: false },
+      { icon: <GoCircle size={8} />, name: "ข้อมูลวิดีโอ", path: "/admin/video", pro: false },
       { icon: <GoCircle size={8} />, name: "ข้อมูลคำถาม-ระหว่างเรียน", path: "/admin/question", pro: false },
       { icon: <GoCircle size={8} />, name: "ข้อมูลคำถาม-สุดท้าย", path: "/admin/questionEnd", pro: false },
       // { name: "Ecommerce", path: "/", pro: false },
@@ -76,7 +76,7 @@ const navItems: NavItem[] = [
 const othersItems: NavItem[] = [
   {
     icon: <PieChartIcon />,
-    name: "ประวัตื",
+    name: "ประวัติ",
     subItems: [
       { icon: <GoCircle size={8} />, name: "คนที่เคยย้ายบริษัท", path: "/admin/reports/changeCompany", pro: false },
     ],

@@ -140,10 +140,14 @@ const QuestionEnd = ({ idCard }: propType) => {
             <div className='bg-white p-6 rounded-lg shadow-lg w-full md:w-5/6'>
                 {!submitted && questions.length > 0 && (
                     <>
-                        <h2 className='text-xl font-bold md:mb-4'>คำถามทั้งหมด {currentIndex + 1} / {questions.length} </h2>
-                        <p className=' font-medium text-gray-700'>คำถาม</p>
-                        <p className='mb-4 mt-3 text-lg md:text-2xl'>{questions[currentIndex]?.name}</p>
-                        <div className='grid grid-cols-2 md:grid-cols-3 gap-4 '>
+                        <div className='flex flex-col md:flex-row gap-2 justify-between items-center'>
+                            <h2 className='text-xl font-bold '>คำถามทั้งหมด {currentIndex + 1} / {questions.length} ข้อ </h2>
+                            <button  className=' text-red-500 px-4 py-1 rounded-md border border-red-500 hover:bg-red-600 hover:text-white'>ออกจากการสอบ</button>
+                        </div>
+                        <div className='my-6 py-6 px-4 bg-gray-100 rounded-md border border-gray-300'>
+                            <p className=' text-lg md:text-2xl'>{questions[currentIndex]?.name}</p>
+                        </div>
+                        <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mt-2 '>
                             {questions[currentIndex].questionEndList.map(choice => (
                                 <button
                                     key={choice.id}
@@ -158,8 +162,8 @@ const QuestionEnd = ({ idCard }: propType) => {
                 )}
 
                 {submitted && (
-                    <>   
-                    <div className='flex gap-2 items-center mb-4'> <FaUpload /> <h2 className='text-xl font-bold '>ส่งข้อสอบ</h2></div>
+                    <>
+                        <div className='flex gap-2 items-center mb-4'> <FaUpload /> <h2 className='text-xl font-bold '>ส่งข้อสอบ</h2></div>
 
                         <div className='px-3 md:px-8 py-8 bg-gray-50 rounded-md border border-gray-100'>
 
@@ -174,6 +178,8 @@ const QuestionEnd = ({ idCard }: propType) => {
                             {getResult().correct === questions.length && (
                                 <div>
                                     <h3 className='text-4xl font-medium text-green-600'>คุณทำข้อสอบผ่านทุกข้อแล้ว </h3>
+                                    <p className='my-4'>ระบบจะส่งใบเซอร์ไปให้ทาง Email ที่ลงทะเบียนไว้ </p>
+                                    <p className='my-4'>และจะไม่สามารถเข้ามาหน้านี้ได้จนกว่า ใบเซอร์หมดอายุ !! </p>
                                     <Button onClick={() => route.push('/')} className='mt-4' >กลับหน้าหลัก</Button>
                                 </div>
                             )}
@@ -200,7 +206,7 @@ const QuestionEnd = ({ idCard }: propType) => {
                             )}
                             {getResult().correct === questions.length && (
                                 <div>
-                                    <h2 className='text-xl font-bold mb-4 mt-4 text-green-600'>ยินดีด้วย คุณสอบผ่าน</h2>
+                                    <h2 className='text-base font-bold mb-4 mt-4 text-green-600'>ยินดีด้วย คุณสอบผ่าน</h2>
                                 </div>
                             )}
                         </>
