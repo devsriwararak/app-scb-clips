@@ -21,7 +21,7 @@ const PageQuestion = ({ params }: Props) => {
     const [error, setError] = useState<string>("")
 
 
-    const checkStatus = async (sessionType: string | null) => {
+    const checkStatus = async (sessionType: string | null) => {        
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/checkIdCard`, {
                 idCard: idCard
@@ -37,7 +37,7 @@ const PageQuestion = ({ params }: Props) => {
                     } else if (statusQuestionEnd === 1) {
                         setCheck(false)
                         setError("คุณทำข้อสอบไปแล้ว  !!")
-                        toast.error('ไม่สามารถทำข้อสอบซ้ำได้')
+                        toast.error('ไม่สามารถทำข้อสอบซ้ำได้') // ทำไมได้ alert นี้ 2 ครั้ง  ตอนเปิดหน้ามาครั้งแรก แต่ รีเฟสได้ 1 ครั้ง ตามปกติ
                     }
 
                 } else if (sessionType === "Online") {
@@ -49,11 +49,9 @@ const PageQuestion = ({ params }: Props) => {
                         setError("คุณทำข้อสอบไปแล้ว !!")
                         toast.error('ไม่สามารถทำข้อสอบซ้ำได้')
                     }
-
                 } else {
                     setCheck(false)
                 }
-
             }
         } catch (error) {
             console.log(error);
@@ -67,7 +65,6 @@ const PageQuestion = ({ params }: Props) => {
 
     useEffect(() => {
         const sessionType = sessionStorage.getItem("type")
-
         if (sessionType) {
             checkStatus(sessionType)
         }
@@ -76,8 +73,8 @@ const PageQuestion = ({ params }: Props) => {
     return (
         <div className="px-8 md:px-20 py-8 flex justify-center items-center h-screen ">
 
-
-            {/* {check ? (
+{/* 
+            {check ? (
                 <QuestionEnd idCard={idCard} />
             ) : (
                 <div className='bg-white p-6 rounded-lg shadow-lg md:w-1/2 text-center py-16'>
@@ -87,6 +84,8 @@ const PageQuestion = ({ params }: Props) => {
                     <Button onClick={() => rounter.push('/')} className='mt-6' >กลับหน้าหลัก</Button>
                 </div>
             )} */}
+
+
             {loading ? (
                 <div className="text-center py-16">
                     <p>กำลังโหลดข้อมูล...</p>

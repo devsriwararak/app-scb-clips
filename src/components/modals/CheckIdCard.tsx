@@ -52,7 +52,7 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
                 // เช็ค login มาจาก type เดียวกัน ไหม
 
                 if (type !== location) {
-                    toast.error(`เข้าผิดลิ้งคื สถานะ คือ ${location} `)
+                    toast.error(`ไม่พบสิทธิ์ในการเข้าอบรม ${type} `)
                     return
                 }
 
@@ -65,11 +65,12 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
                 if (location === "Online") {
                     router.replace(`/member/video/${idCard}`);
                 } else if (location === "Onsite") {
-                    sessionStorage.setItem("type", location);
+                    
                     router.replace(`/member/questions/${idCard}`);
                 } else {
-                    toast.error(`เข้าผิดลิ้งค์ สถานะคือ ${location}`);
+                    toast.error(`ไม่พบการลงทะเบียนในระบบ ${location}`);
                 }
+                sessionStorage.setItem("type", location);
 
                 // if (dateOfTraining) {
                 //     if (location === "Online") {
@@ -130,7 +131,7 @@ const CheckIdCard = ({ isOpen, closeModal, type }: Props) => {
             <div className="no-scrollbar relative w-full max-w-[700px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                 <div className=" pr-14">
                     <h4 className="mb-2 text-xl font-semibold text-gray-800 dark:text-white/90">
-                        ระบบตรวจสอบสิทธิ์
+                        เข้าสู่ระบบ {type || ""}
                     </h4>
 
                     <div className='mt-4'>

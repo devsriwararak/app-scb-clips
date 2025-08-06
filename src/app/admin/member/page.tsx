@@ -67,13 +67,13 @@ const PageMemberAdmin = () => {
     const [companyData, setCompanyData] = useState<SelectType[]>([])
     const [filterData, setFilterData] = useState<SelectType[]>([])
     const [selectedCompany, setSelectedCompany] = useState<string | null>(null)
-    const [selectedFilter, setSelectedFilter] = useState<string >("desc")
+    const [selectedFilter, setSelectedFilter] = useState<string>("desc")
 
 
     const fetchData = async () => {
         try {
             const res = await api.get(`/api/member/all`, {
-                params: { page, search, companyId: selectedCompany , filter : selectedFilter }
+                params: { page, search, companyId: selectedCompany, filter: selectedFilter }
             })
             if (res.status === 200) {
                 console.log(res.data);
@@ -105,7 +105,7 @@ const PageMemberAdmin = () => {
         setFilterData([
             { value: "desc", label: "ใหม่-เก่า" },
             { value: "asc", label: "เก่า-ใหม่" },
-           
+
         ])
     }
 
@@ -113,7 +113,7 @@ const PageMemberAdmin = () => {
         fetchData()
         fetchDataCompany()
         fetchDataFilter()
-    }, [search, page, selectedCompany , selectedFilter])
+    }, [search, page, selectedCompany, selectedFilter])
 
 
     const handleAdd = async (type: string, item?: MemberDataType) => {
@@ -217,12 +217,11 @@ const PageMemberAdmin = () => {
 
             <div>
                 <PageBreadcrumb pageTitle="จัดการข้อมูลสมาชิก" />
-                <div className="space-y-6">
-                    <ComponentCard title="">
-
-                        <div className='flex justify-between items-center gap-4'>
-                            <div className='w-2/3 flex gap-4  items-center'>
-                                <div className='w-1/2 '>
+                <div className="space-y-6 overflow-x-scroll ">
+                    <ComponentCard title="" className='w-full'>
+                        <div className='flex flex-col md:flex-row  justify-between items-center gap-4 '>
+                            <div className='w-full md:w-2/3 flex flex-col md:flex-row gap-4  items-center'>
+                                <div className='w-full md:w-1/2 '>
                                     <Input
                                         placeholder='ค้นหา ชื่อ นามสกุล / เลขบัตรประชาชน'
                                         value={search}
@@ -230,53 +229,51 @@ const PageMemberAdmin = () => {
                                         onKeyDown={(e) => e.key === 'Enter' && setSearch(search)}
                                     />
                                 </div>
-
                                 {companyData.length > 0 && (
                                     <ReactSelect<SelectType>
                                         options={companyData}
                                         placeholder="เลือกบริษัท"
                                         isClearable={true}
-                                        className='w-1/2'
+                                        className='w-full md:w-1/2'
                                         onChange={(option) => {
                                             setSelectedCompany(option?.value || null)
                                             setPage(1)
                                         }}
                                     />
                                 )}
-
                                 {filterData.length > 0 && (
                                     <ReactSelect<SelectType>
                                         options={filterData}
                                         placeholder="ใหม่-เก่า"
                                         isClearable={true}
-                                        className='w-1/2'
+                                        className='w-full  md:w-1/2'
                                         onChange={(option) => {
                                             setSelectedFilter(option?.value || "desc")
                                             setPage(1)
                                         }}
                                     />
                                 )}
-
                             </div>
-                            <div className='w-1/3 flex justify-end gap-4 items-center'>
-
-                                <Button size="sm" onClick={() => handleAdd('create')}>เพิ่มข้อมูล</Button>
+                            <div className='w-full md:w-1/3 flex justify-end gap-4 items-center'>
+                                <Button size="sm" onClick={() => handleAdd('create')} className='w-full md:w-fit'>เพิ่มข้อมูล</Button>
                             </div>
                         </div>
 
-                        <MemberTable
-                            data={data}
-                            loading={loading}
-                            handleDelete={handleDelete}
-                            handleAdd={handleAdd}
-                            currentPage={page}
-                            setSelected={setSelected}
-                            handleAdd2Year={handleAdd2Year}
-                            handleSwitchChange={handleSwitchChange}
+                            <div className=' overflow-x-auto w-full'>
+                                <MemberTable
+                                    data={data}
+                                    loading={loading}
+                                    handleDelete={handleDelete}
+                                    handleAdd={handleAdd}
+                                    currentPage={page}
+                                    setSelected={setSelected}
+                                    handleAdd2Year={handleAdd2Year}
+                                    handleSwitchChange={handleSwitchChange}
 
-                        />
+                                />
+                            </div>
 
-                        <div className='flex justify-between items-center'>
+                        <div className='flex flex-col md:flex-row gap-4 justify-between items-center'>
                             <Pagination
                                 currentPage={page}
                                 totalPages={totalPages}

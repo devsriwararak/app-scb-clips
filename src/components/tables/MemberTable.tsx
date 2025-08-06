@@ -87,7 +87,7 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
 
     return (
         <div className=" rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-            <div className="max-w-full overflow-x-visible">
+            <div className="max-w-full overflow-x-scroll">
                 <div className="w-full">
                     <Table>
                         {/* Table Header */}
@@ -123,6 +123,12 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
                                     className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
                                 >
                                     วันที่อบรม
+                                </TableCell>
+                                <TableCell
+                                    isHeader
+                                    className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+                                >
+                                    สถานที่อบรม
                                 </TableCell>
                                 <TableCell
                                     isHeader
@@ -168,6 +174,9 @@ export default function MemberTable({ data, loading, handleDelete, handleAdd, cu
 
                                     <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                                         {order.dateOfTraining ? (moment(order.dateOfTraining).format('D MMMM YYYY')) : "-"}
+                                    </TableCell>
+                                    <TableCell className={`px-4 py-3 font-semibold text-center text-theme-sm dark:text-gray-400 ${order.location.name === "Online" ? "text-blue-500" : "text-yellow-500"}`}>
+                                        {order.location.name}
                                     </TableCell>
                                     <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                                         {order.dateEndCertificate ? (moment(order.dateEndCertificate).format('D MMMM YYYY')) : "ยังไม่อบรม"}

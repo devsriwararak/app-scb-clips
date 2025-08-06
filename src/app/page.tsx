@@ -71,22 +71,19 @@ const Page = () => {
             <ComponentCard title="" className='w-full hover:bg-gray-100 cursor-pointer '    >
               <div className='flex flex-col justify-center items-center' onClick={() => handleAdd("register", "")} >
                 <FiUserPlus size={100} className='' />
-                <h2 className='text-2xl mt-6'>ลงทะเบียนเข้าอบรม</h2>
-                <p className='mt-2 text-gray-400'>กรุณาลงทะเบียนก่อน !</p>
+                <h2 className='text-2xl mt-6'>ลงทะเบียน</h2>
               </div>
             </ComponentCard>
             <ComponentCard title="" className='w-full hover:bg-gray-100 cursor-pointer' >
               <div className='flex flex-col justify-center items-center' onClick={() => handleAdd("checkIdCard", "Online")} >
                 <FiAirplay size={100} className='' />
-                <h2 className='text-2xl mt-6'>ออนไลน์</h2>
-                <p className='mt-2 text-gray-400'>( ดูวีโอ + ทำข้อสอบ )</p>
+                <h2 className='text-2xl mt-6 text-center'>สำหรับอบนมระบบ Online</h2>
               </div>
             </ComponentCard>
             <ComponentCard title="" className='w-full hover:bg-gray-100 cursor-pointer' >
               <div className='flex flex-col justify-center items-center' onClick={() => handleAdd("checkIdCard","Onsite")} >
                 <FiCodepen size={100} className='' />
-                <h2 className='text-2xl mt-6'>ออนไซต์</h2>
-                <p className='mt-2 text-gray-400'>( กดเพื่อทำข้อสอบ )</p>
+                <h2 className='text-2xl mt-6'>สำหรับอบรม Onsite</h2>
               </div>
             </ComponentCard>
           </div>

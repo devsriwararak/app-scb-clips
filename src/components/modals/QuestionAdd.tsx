@@ -54,15 +54,15 @@ const QuestionAdd = ({ isOpen, closeModal, onSubmit, defaultValues, error }: Pro
                 <form className="flex flex-col mt-6" onSubmit={handleSubmit(onSubmit)}>
                     <div className=" px-2 pb-3">
                         <div>
-                            <Label>สถานที่อบรม</Label>
+                            <Label>คำถาม</Label>
                             <Input
                                 {...register("name", { required: true })}
                                 type="text"
-                                placeholder='กรอกชื่อบริษัท'
+                                placeholder='กรอกคำถาม'
                             />
                         </div>
                         <div className='mt-6 w-1/3'>
-                            <Label>เลือกคำนำหน้าชื่อ</Label>
+                            <Label>เลือกคำตอบ</Label>
                             <div className="relative">
                                 <Controller
                                     name="answer"
