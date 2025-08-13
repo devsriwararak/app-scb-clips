@@ -10,7 +10,7 @@ const PageMemberQuestion = () => {
 
     useEffect(() => {
         openModal()
-    }, [])
+    }, [openModal])
 
     return (
         <>

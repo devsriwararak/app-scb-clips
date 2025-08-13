@@ -8,7 +8,7 @@ import { useModal } from '@/hooks/useModal'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { use, useEffect, useRef, useState } from 'react'
+import React, { use, useCallback, useEffect, useRef, useState } from 'react'
 import { FaPlay } from "react-icons/fa6";
 import { RiFullscreenFill } from "react-icons/ri";
 
@@ -57,7 +57,7 @@ const PageVideoMember = ({ params }: Props) => {
   const [redirectTimeoutId, setRedirectTimeoutId] = useState<NodeJS.Timeout | null>(null)
   const [answerResults, setAnswerResults] = useState<string[]>([])
 
-  const checkIdCard = async () => {
+  const checkIdCard = useCallback(async () => {
     try {
 
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/vdo/secure/checkIdCard`, {
@@ -77,7 +77,7 @@ const PageVideoMember = ({ params }: Props) => {
       setCheck(false)
 
     }
-  }
+  },[idCard, openModal])
 
   const fetchQuestion = async () => {
     try {
@@ -118,7 +118,7 @@ const PageVideoMember = ({ params }: Props) => {
   // สุ่มคำถามจาก API (fetchQuestion())
   // แสดง popup (setShowQuestionPopup(true))
   // ตั้ง setTimeout เพื่อ redirect หลัง 2 นาทีถ้าไม่ตอบ
-  const handleTimeUpdate = async (video: HTMLVideoElement) => {
+  const handleTimeUpdate = useCallback(async (video: HTMLVideoElement) => {
     const { shouldShow, key } = shouldShowQuestion(video, currentVideo, showQuestionPopup, questionAlreadyShownFor)
 
     if (shouldShow) {
@@ -133,7 +133,7 @@ const PageVideoMember = ({ params }: Props) => {
 
       setRedirectTimeoutId(timeoutId)
     }
-  }
+  },[currentVideo, showQuestionPopup, questionAlreadyShownFor, router])
 
   const handleAnswered = (userAnswer: 'YES' | 'NO') => {
     const isCorrect = userAnswer === question?.answer
@@ -145,7 +145,7 @@ const PageVideoMember = ({ params }: Props) => {
     videoRef.current?.play()
   }
 
-  const updateStatusMember = async () => {
+  const updateStatusMember = useCallback(async () => {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/vdo/end`, {
         idCard
@@ -160,7 +160,7 @@ const PageVideoMember = ({ params }: Props) => {
 
     }
     return false
-  }
+  },[idCard])
 
   // จบวีดีโอแล้ว แต่ละอันให้ทำยังไงต่อ ******
   // บันทึกว่า video นี้ดูจบแล้ว
@@ -200,7 +200,7 @@ const PageVideoMember = ({ params }: Props) => {
 
   useEffect(() => {
     checkIdCard()
-  }, [])
+  }, [checkIdCard])
 
   useEffect(() => {
     showQuestionPopupRef.current = showQuestionPopup
@@ -220,7 +220,7 @@ const PageVideoMember = ({ params }: Props) => {
       video.removeEventListener('timeupdate', onTimeUpdate)
       if (redirectTimeoutId) clearTimeout(redirectTimeoutId)
     }
-  }, [currentVideo, showQuestionPopup])
+  }, [currentVideo, showQuestionPopup, handleTimeUpdate, redirectTimeoutId])
 
   // ป้องกันเล่นวิดีโอต่อเมื่อ popup ยังแสดงอยู่
   useEffect(() => {
@@ -246,7 +246,7 @@ const PageVideoMember = ({ params }: Props) => {
         if (status) router.push(`/member/questions/${idCard}`)
       })()
     }
-  }, [watchedVideos])
+  }, [watchedVideos, idCard, router, updateStatusMember, videos.length ])
 
   // รีเซ็ตวิดีโอเมื่อเปลี่ยนแท็บ (visibility change)
   useEffect(() => {

@@ -5,6 +5,7 @@ import { MemberDataType } from '@/app/admin/member/page'
 import moment from 'moment'
 import 'moment/locale/th'
 import api from '@/app/lib/axiosInstance'
+import Image from 'next/image'
 moment.locale('th')
 
 
@@ -81,7 +82,7 @@ const MemberViewImage = ({ isOpen, closeModal, defaultValues }: Props) => {
         <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[800px] m-4 z-10">
             <div className=" relative w-full max-w-[800px]  rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-8 overflow-y-auto max-h-[85vh]">
                 {image  ? (
-                    <img src={image!} alt="xxx" className="w-full h-auto" />
+                    <Image src={image!} alt="xxx" className="w-full h-auto" />
                 ) : (
                    <>
                     <h3 className='text-center text-xl'>

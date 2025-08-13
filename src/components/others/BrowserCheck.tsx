@@ -20,7 +20,7 @@ const BrowserCheck = ({setCheck, setCheckSafari}: types) => {
       alert('กรุณาใช้เบราว์เซอร์ Google Chrome เพื่อเล่นวิดีโอ')
     }
 
-    }, [])
+    }, [setCheck, setCheckSafari])
     return (
         <h1 className='text-3xxl'>{error}</h1>
     )

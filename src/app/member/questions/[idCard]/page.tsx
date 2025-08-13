@@ -1,7 +1,7 @@
 'use client'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import React, { use, useEffect, useState } from 'react'
+import React, { use, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import QuestionEnd from './QuestionEnd'
 import Button from '@/components/ui/button/Button'
@@ -21,7 +21,7 @@ const PageQuestion = ({ params }: Props) => {
     const [error, setError] = useState<string>("")
 
 
-    const checkStatus = async (sessionType: string | null) => {        
+    const checkStatus = useCallback(async (sessionType: string | null) => {        
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/checkIdCard`, {
                 idCard: idCard
@@ -61,14 +61,14 @@ const PageQuestion = ({ params }: Props) => {
         } finally {
             setLoading(false)
         }
-    }
+    },[idCard, rounter])
 
     useEffect(() => {
         const sessionType = sessionStorage.getItem("type")
         if (sessionType) {
             checkStatus(sessionType)
         }
-    }, [])
+    }, [checkStatus])
 
     return (
         <div className="px-8 md:px-20 py-8 flex justify-center items-center h-screen ">

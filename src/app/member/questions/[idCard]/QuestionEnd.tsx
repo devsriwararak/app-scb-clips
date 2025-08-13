@@ -2,7 +2,7 @@
 import Button from '@/components/ui/button/Button'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FaBan, FaRegRectangleList, FaUpload } from 'react-icons/fa6'
 
 interface propType {
@@ -70,7 +70,7 @@ const QuestionEnd = ({ idCard }: propType) => {
 
     }
 
-    const getResult = () => {
+    const getResult = useCallback(() => {
         let wrongCount = 0
         userAnswers.forEach((item) => {
             const found = questions
@@ -85,9 +85,26 @@ const QuestionEnd = ({ idCard }: propType) => {
             correct: questions.length - wrongCount,
             wrong: wrongCount
         }
-    }
+    }, [userAnswers, questions])
 
-    const updateStatusMember = async () => {
+    const sendEmail = useCallback(async () => {
+        try {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/certificate/send`, {
+                idCard
+            })
+            console.log(res.data);
+
+            if (res.status === 200) {
+                return true
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+        return false
+    }, [idCard])
+
+    const updateStatusMember = useCallback(async () => {
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/questionEnd/end`, {
                 idCard
@@ -103,24 +120,9 @@ const QuestionEnd = ({ idCard }: propType) => {
 
         }
         return false
-    }
+    }, [idCard, sendEmail])
 
-    const sendEmail = async () => {
-        try {
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/member/certificate/send`, {
-                idCard
-            })
-            console.log(res.data);
 
-            if (res.status === 200) {
-                return true
-            }
-        } catch (error) {
-            console.log(error);
-
-        }
-        return false
-    }
 
     useEffect(() => {
         fetchQuestion()
@@ -133,7 +135,7 @@ const QuestionEnd = ({ idCard }: propType) => {
                 updateStatusMember()
             }
         }
-    }, [submitted])
+    }, [submitted, getResult, questions.length, updateStatusMember])
 
     return (
         < div className='flex flex-col md:flex-row gap-4 w-full'>
@@ -142,7 +144,7 @@ const QuestionEnd = ({ idCard }: propType) => {
                     <>
                         <div className='flex flex-col md:flex-row gap-2 justify-between items-center'>
                             <h2 className='text-xl font-bold '>คำถามทั้งหมด {currentIndex + 1} / {questions.length} ข้อ </h2>
-                            <button  className=' text-red-500 px-4 py-1 rounded-md border border-red-500 hover:bg-red-600 hover:text-white'>ออกจากการสอบ</button>
+                            <button className=' text-red-500 px-4 py-1 rounded-md border border-red-500 hover:bg-red-600 hover:text-white'>ออกจากการสอบ</button>
                         </div>
                         <div className='my-6 py-6 px-4 bg-gray-100 rounded-md border border-gray-300'>
                             <p className=' text-lg md:text-2xl'>{questions[currentIndex]?.name}</p>

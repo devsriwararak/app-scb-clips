@@ -12,7 +12,7 @@ import Pagination from '@/components/tables/Pagination'
 import Button from '@/components/ui/button/Button'
 import { useModal } from '@/hooks/useModal'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 export interface CompanyType {
@@ -38,7 +38,7 @@ const PageCompany = () => {
     const [totalPages, setTotalPages] = useState(1)
 
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const res = await api.get(`/api/company/all`, {
                 params: { page, search }
@@ -52,11 +52,11 @@ const PageCompany = () => {
         } catch (error) {
             console.log(error);
         }
-    }
+    },[search, page])
 
     useEffect(() => {
         fetchData()
-    }, [search, page])
+    }, [search, page, fetchData])
 
     const handleAdd = async (type: string, item?: CompanyType) => {
         setError("")

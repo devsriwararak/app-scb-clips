@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import { MemberDataType } from '@/app/admin/member/page'
 import api from '@/app/lib/axiosInstance'
 import { isMobile } from "react-device-detect";
+import Image from 'next/image'
 
 
 interface Props {
@@ -35,7 +36,7 @@ interface SelectType {
 const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }: Props) => {
 
 
-    const { register, control, reset, handleSubmit } = useForm<MemberDataType>({
+    const { register, control, reset, handleSubmit, watch } = useForm<MemberDataType>({
         defaultValues: {
             id: 0,
             titleName: "",
@@ -176,7 +177,13 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
             formData.append('image', data.image[0]);
         }
         if (defaultValues?.image) {
-            formData.append('image', defaultValues?.image);
+            // formData.append('image', defaultValues?.image);
+            if (defaultValues.image instanceof FileList && defaultValues.image.length > 0) {
+                formData.append('image', defaultValues.image[0]);
+            }
+            else if (typeof defaultValues.image === 'string') {
+                formData.append('image', defaultValues.image);
+            }
         }
 
         if (!data) return toast.error('ส่งข้อมูลไม่ครบ');
@@ -239,6 +246,20 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
         toast.error(`กรุณากรอกข้อมูลให้ครบถ้วน: \n- ${fieldNames.join("\n- ")}`)
     };
 
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const imageFile = watch("image");
+
+    useEffect(() => {
+        if (imageFile instanceof FileList && imageFile.length > 0) {
+            const file = imageFile[0];
+            const newImageURL = URL.createObjectURL(file);
+            setImagePreview(newImageURL);
+
+            return () => URL.revokeObjectURL(newImageURL);
+        }
+    }, [imageFile]);
+
+    const displayUrl = imagePreview || defaultValues?.imageUrl;
 
     return (
         <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[600px]  m-2 z-10">
@@ -463,8 +484,22 @@ const MemberAdd = ({ isOpen, closeModal, defaultValues, error, type, fetchData }
                             />
                         </div>
 
+
+
                         {isMobile ? (
                             <div className='w-full'>
+                                {displayUrl && (
+                                    <div className="mt-4 mb-4 text-center">
+                                        <Label>รูปภาพตัวอย่าง</Label>
+                                        <div className="mt-2 flex justify-center">
+                                            <Image
+                                                src={displayUrl}
+                                                alt="Image Preview"
+                                                className="w-auto h-48 max-w-full object-contain rounded-md border p-2"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                                 <>
                                     <label
                                         htmlFor="image-upload"

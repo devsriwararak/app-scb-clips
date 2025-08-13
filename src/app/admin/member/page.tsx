@@ -11,7 +11,7 @@ import Pagination from '@/components/tables/Pagination'
 import Button from '@/components/ui/button/Button'
 import { useModal } from '@/hooks/useModal'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import ReactSelect from 'react-select'
 import MemberView from '@/components/modals/MemberView'
@@ -27,7 +27,7 @@ export interface MemberDataType {
     idCardType: number
     phone: string
     email: string
-    image: string
+    image: FileList | string;
     companyId: number
     locationId: number
     lecturerId: number
@@ -38,6 +38,8 @@ export interface MemberDataType {
     company: { name: string }
     lecturer: { name: string }
     verify: number
+    imageUrl :string
+    
 
 }
 
@@ -70,7 +72,7 @@ const PageMemberAdmin = () => {
     const [selectedFilter, setSelectedFilter] = useState<string>("desc")
 
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const res = await api.get(`/api/member/all`, {
                 params: { page, search, companyId: selectedCompany, filter: selectedFilter }
@@ -85,7 +87,7 @@ const PageMemberAdmin = () => {
         } catch (error) {
             console.log(error);
         }
-    }
+    },[search, page, selectedCompany, selectedFilter])
 
     const fetchDataCompany = async () => {
         try {
@@ -113,7 +115,7 @@ const PageMemberAdmin = () => {
         fetchData()
         fetchDataCompany()
         fetchDataFilter()
-    }, [search, page, selectedCompany, selectedFilter])
+    }, [search, page, selectedCompany, selectedFilter, fetchData])
 
 
     const handleAdd = async (type: string, item?: MemberDataType) => {

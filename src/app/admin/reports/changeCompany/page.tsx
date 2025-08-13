@@ -8,7 +8,7 @@ import Input from '@/components/form/input/InputField'
 import Pagination from '@/components/tables/Pagination'
 import { useModal } from '@/hooks/useModal'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import ReactSelect from 'react-select'
 import MemberView from '@/components/modals/MemberView'
@@ -45,6 +45,7 @@ export interface MemberDataForViewType {
     company: { name: string }
     lecturer: { name: string }
     verify: number
+    imageUrl :string
 
 }
 
@@ -73,7 +74,7 @@ const PageChangeCompany = () => {
     const [selectedCompany, setSelectedCompany] = useState<string | null>(null)
 
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
 
             const res = await api.get(`/api/report/changeCompany/all`, {
@@ -86,7 +87,7 @@ const PageChangeCompany = () => {
         } catch (error) {
             console.log(error);
         }
-    }
+    },[search, page, selectedCompany])
 
     const fetchDataCompany = async () => {
         try {
@@ -106,7 +107,7 @@ const PageChangeCompany = () => {
     useEffect(() => {
         fetchData()
         fetchDataCompany()
-    }, [search, page, selectedCompany])
+    }, [search, page, selectedCompany, fetchData])
 
 
     const handleAdd = async (type: string, item?: MemberDataType) => {
